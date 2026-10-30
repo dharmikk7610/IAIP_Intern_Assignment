@@ -1,0 +1,11 @@
+# Copy this file to application-local.properties (same folder) and fill in your values.
+# application-local.properties is git-ignored, so your secrets never reach GitHub.
+DB_USERNAME=root
+DB_PASSWORD=your_mysql_password
+
+# Three DIFFERENT random 32-byte keys, Base64-encoded. Generate each with:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# Keep ENCRYPTION_KEY safe: data encrypted with it cannot be read without it.
+ENCRYPTION_KEY=
+HASH_KEY=
+JWT_SECRET=

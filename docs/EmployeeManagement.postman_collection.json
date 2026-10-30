@@ -1,0 +1,256 @@
+{
+  "info": {
+    "name": "Employee Management System API",
+    "description": "Run 'Auth / Login as Admin' first: its test script stores the JWT in the {{token}} collection variable, which every other request sends as a Bearer token. 'Create employee' stores {{employeeId}} for the requests after it.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:9998/api" },
+    { "key": "token", "value": "" },
+    { "key": "employeeId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login as Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.collectionVariables.set('token', pm.response.json().token);"] }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"manager\",\n  \"password\": \"Manager@123\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login as Employee (Rahul)",
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": ["pm.collectionVariables.set('token', pm.response.json().token);"] }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"rahul\",\n  \"password\": \"Employee@123\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login - wrong password (401)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Current user",
+          "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" }
+        }
+      ]
+    },
+    {
+      "name": "Lookups",
+      "item": [
+        { "name": "Departments", "request": { "method": "GET", "url": "{{baseUrl}}/departments" } },
+        { "name": "Roles / designations", "request": { "method": "GET", "url": "{{baseUrl}}/roles" } }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Search - assignment example",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/employees?search=Rahul&departmentId=1&minSalary=300000&maxSalary=500000&pageNumber=1&pageSize=10"
+          }
+        },
+        {
+          "name": "Search - all filters + sorting",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/employees?search=&departmentId=&roleId=&status=ACTIVE&gender=FEMALE&joinedFrom=2018-01-01&joinedTo=2025-12-31&minSalary=300000&maxSalary=1000000&sortBy=annualSalary&sortDir=desc&pageNumber=1&pageSize=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["employees"],
+              "query": [
+                { "key": "search", "value": "", "description": "Text in code, name, email, mobile, address, department, role, status" },
+                { "key": "departmentId", "value": "", "disabled": true },
+                { "key": "roleId", "value": "", "disabled": true },
+                { "key": "status", "value": "ACTIVE", "description": "ACTIVE | INACTIVE | ON_LEAVE" },
+                { "key": "gender", "value": "FEMALE", "description": "MALE | FEMALE | OTHER" },
+                { "key": "joinedFrom", "value": "2018-01-01" },
+                { "key": "joinedTo", "value": "2025-12-31" },
+                { "key": "minSalary", "value": "300000", "description": "inclusive" },
+                { "key": "maxSalary", "value": "1000000", "description": "exclusive" },
+                { "key": "sortBy", "value": "annualSalary" },
+                { "key": "sortDir", "value": "desc" },
+                { "key": "pageNumber", "value": "1" },
+                { "key": "pageSize", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create employee",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// unique values so the request can be run repeatedly",
+                  "const n = String(Math.floor(10000000 + Math.random() * 89999999));",
+                  "pm.collectionVariables.set('aadhaar', `7777-${n.slice(0, 4)}-${n.slice(4, 8)}`);",
+                  "pm.collectionVariables.set('pan', `PQRST${n.slice(0, 4)}Z`);",
+                  "pm.collectionVariables.set('email', `postman.${n}@example.com`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "pm.test('Code generated from department', () => pm.expect(pm.response.json().employeeCode).to.match(/^I\\d{4}$/));",
+                  "pm.collectionVariables.set('employeeId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Postman Test User\",\n  \"email\": \"{{email}}\",\n  \"mobile\": \"9123456789\",\n  \"aadhaarNumber\": \"{{aadhaar}}\",\n  \"panNumber\": \"{{pan}}\",\n  \"dateOfBirth\": \"1996-08-15\",\n  \"gender\": \"MALE\",\n  \"address\": \"221 MG Road, Bengaluru\",\n  \"departmentId\": 1,\n  \"roleId\": 1,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 480000,\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/employees"
+          }
+        },
+        {
+          "name": "Create employee - invalid fields (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rahul 123\",\n  \"email\": \"not-an-email\",\n  \"mobile\": \"98765\",\n  \"aadhaarNumber\": \"1234\",\n  \"panNumber\": \"ABC123\",\n  \"dateOfBirth\": \"2099-01-01\",\n  \"gender\": \"MALE\",\n  \"address\": \"\",\n  \"departmentId\": 1,\n  \"roleId\": 1,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 0\n}"
+            },
+            "url": "{{baseUrl}}/employees"
+          }
+        },
+        { "name": "Get employee by ID", "request": { "method": "GET", "url": "{{baseUrl}}/employees/{{employeeId}}" } },
+        {
+          "name": "Get personal details",
+          "request": { "method": "GET", "url": "{{baseUrl}}/employees/{{employeeId}}/personal-details" }
+        },
+        {
+          "name": "Update employee",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Postman Test User\",\n  \"email\": \"{{email}}\",\n  \"mobile\": \"9123456789\",\n  \"aadhaarNumber\": null,\n  \"panNumber\": null,\n  \"dateOfBirth\": \"1996-08-15\",\n  \"gender\": \"MALE\",\n  \"address\": \"New address, Pune\",\n  \"departmentId\": 1,\n  \"roleId\": 2,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 650000,\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        },
+        {
+          "name": "Deactivate employee (ADMIN only)",
+          "request": { "method": "PATCH", "url": "{{baseUrl}}/employees/{{employeeId}}/deactivate" }
+        },
+        {
+          "name": "No token (401)",
+          "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/employees" }
+        }
+      ]
+    },
+    {
+      "name": "Department transfers",
+      "item": [
+        {
+          "name": "Transfer employee to HR",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": { "exec": ["pm.collectionVariables.set('today', new Date().toISOString().slice(0, 10));"] }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('New HR code', () => pm.expect(pm.response.json().employee.employeeCode).to.match(/^H\\d{4}$/));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newDepartmentId\": 2,\n  \"transferDate\": \"{{today}}\",\n  \"reason\": \"Moving to HR operations\"\n}"
+            },
+            "url": "{{baseUrl}}/employees/{{employeeId}}/transfer"
+          }
+        },
+        {
+          "name": "Transfer to same department (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newDepartmentId\": 2,\n  \"transferDate\": \"2025-01-01\",\n  \"reason\": \"Already in HR\"\n}"
+            },
+            "url": "{{baseUrl}}/employees/{{employeeId}}/transfer"
+          }
+        },
+        {
+          "name": "Transfer history",
+          "request": { "method": "GET", "url": "{{baseUrl}}/employees/{{employeeId}}/transfers" }
+        }
+      ]
+    }
+  ]
+}

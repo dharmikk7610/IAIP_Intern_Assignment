@@ -1,0 +1,925 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Employee Management System API",
+        "description": "Employees, department transfers, search and JWT authentication",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:9998",
+            "description": "Generated server url"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Lookups",
+            "description": "Departments and roles for dropdowns and filters"
+        },
+        {
+            "name": "Employees",
+            "description": "Create, view, update and deactivate employees"
+        }
+    ],
+    "paths": {
+        "/api/employees/{id}": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Get employment details of one employee",
+                "operationId": "getById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Update an employee (department changes go through transfer)",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Search, filter, sort and page employees",
+                "description": "All parameters are optional and combined with AND. Global search covers code, name, email, mobile, address, department, role and status (never Aadhaar / PAN).",
+                "operationId": "search",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Case-insensitive text matched against permitted fields",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "departmentId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "roleId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ACTIVE",
+                                "INACTIVE",
+                                "ON_LEAVE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "gender",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "MALE",
+                                "FEMALE",
+                                "OTHER"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "joinedFrom",
+                        "in": "query",
+                        "description": "Joined on or after (yyyy-MM-dd)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "joinedTo",
+                        "in": "query",
+                        "description": "Joined on or before (yyyy-MM-dd)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "minSalary",
+                        "in": "query",
+                        "description": "Annual salary >= minSalary (inclusive)",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxSalary",
+                        "in": "query",
+                        "description": "Annual salary < maxSalary (exclusive), e.g. 3-5 LPA = 300000 to 500000",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "id, employeeCode, fullName, email, mobile, departmentName, roleName, joiningDate, annualSalary, status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortDir",
+                        "in": "query",
+                        "description": "asc or desc",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pageNumber",
+                        "in": "query",
+                        "description": "1-based page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Records per page (UI offers 5, 10, 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageResponseEmployeeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Create an employee (employee code is generated from the department)",
+                "operationId": "create",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/{id}/transfer": {
+            "post": {
+                "tags": [
+                    "Department transfers"
+                ],
+                "summary": "Transfer an employee to another department (generates a new employee code)",
+                "operationId": "transfer",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TransferRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransferResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log in and receive a JWT",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/employees/{id}/deactivate": {
+            "patch": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Deactivate an employee (soft delete)",
+                "operationId": "deactivate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/roles": {
+            "get": {
+                "tags": [
+                    "Lookups"
+                ],
+                "summary": "List roles / designations",
+                "operationId": "roles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RoleResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/{id}/transfers": {
+            "get": {
+                "tags": [
+                    "Department transfers"
+                ],
+                "summary": "Transfer history of an employee, newest first",
+                "operationId": "history",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TransferHistoryResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/{id}/personal-details": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Get personal details (Aadhaar / PAN full for ADMIN and the employee, masked otherwise)",
+                "operationId": "getPersonalDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeePersonalDetailsResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/departments": {
+            "get": {
+                "tags": [
+                    "Lookups"
+                ],
+                "summary": "List departments",
+                "operationId": "departments",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DepartmentResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Who am I (from the token)",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "EmployeeRequest": {
+                "type": "object",
+                "properties": {
+                    "fullName": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "pattern": "^[A-Za-z ]+$"
+                    },
+                    "email": {
+                        "type": "string",
+                        "maxLength": 150,
+                        "minLength": 0,
+                        "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^\\d{10}$"
+                    },
+                    "aadhaarNumber": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-?\\d{4}-?\\d{4}$"
+                    },
+                    "panNumber": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z]{5}\\d{4}[A-Za-z]$"
+                    },
+                    "dateOfBirth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "MALE",
+                            "FEMALE",
+                            "OTHER"
+                        ]
+                    },
+                    "address": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 0
+                    },
+                    "departmentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "roleId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "joiningDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "annualSalary": {
+                        "type": "number",
+                        "minimum": 0.0
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "ACTIVE",
+                            "INACTIVE",
+                            "ON_LEAVE"
+                        ]
+                    },
+                    "version": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "required": [
+                    "address",
+                    "annualSalary",
+                    "dateOfBirth",
+                    "departmentId",
+                    "email",
+                    "fullName",
+                    "gender",
+                    "joiningDate",
+                    "mobile",
+                    "roleId"
+                ]
+            },
+            "EmployeeResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "employeeCode": {
+                        "type": "string"
+                    },
+                    "fullName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "MALE",
+                            "FEMALE",
+                            "OTHER"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "departmentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "departmentName": {
+                        "type": "string"
+                    },
+                    "roleId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "roleName": {
+                        "type": "string"
+                    },
+                    "joiningDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "annualSalary": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "ACTIVE",
+                            "INACTIVE",
+                            "ON_LEAVE"
+                        ]
+                    },
+                    "version": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "TransferRequest": {
+                "type": "object",
+                "properties": {
+                    "newDepartmentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "transferDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "reason": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 0
+                    }
+                },
+                "required": [
+                    "newDepartmentId",
+                    "reason",
+                    "transferDate"
+                ]
+            },
+            "TransferHistoryResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "employeeId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "employeeName": {
+                        "type": "string"
+                    },
+                    "oldDepartmentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "oldDepartmentName": {
+                        "type": "string"
+                    },
+                    "newDepartmentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "newDepartmentName": {
+                        "type": "string"
+                    },
+                    "oldEmployeeCode": {
+                        "type": "string"
+                    },
+                    "newEmployeeCode": {
+                        "type": "string"
+                    },
+                    "transferDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "reason": {
+                        "type": "string"
+                    },
+                    "transferredBy": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "TransferResponse": {
+                "type": "object",
+                "properties": {
+                    "employee": {
+                        "$ref": "#/components/schemas/EmployeeResponse"
+                    },
+                    "transfer": {
+                        "$ref": "#/components/schemas/TransferHistoryResponse"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "password",
+                    "username"
+                ]
+            },
+            "CurrentUserResponse": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "ADMIN",
+                            "MANAGER",
+                            "EMPLOYEE"
+                        ]
+                    },
+                    "employeeId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "tokenType": {
+                        "type": "string"
+                    },
+                    "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/CurrentUserResponse"
+                    }
+                }
+            },
+            "RoleResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PageResponseEmployeeResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EmployeeResponse"
+                        }
+                    },
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "EmployeePersonalDetailsResponse": {
+                "type": "object",
+                "properties": {
+                    "employeeId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "employeeCode": {
+                        "type": "string"
+                    },
+                    "fullName": {
+                        "type": "string"
+                    },
+                    "aadhaarNumber": {
+                        "type": "string"
+                    },
+                    "panNumber": {
+                        "type": "string"
+                    },
+                    "dateOfBirth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "masked": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "DepartmentResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "codePrefix": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
