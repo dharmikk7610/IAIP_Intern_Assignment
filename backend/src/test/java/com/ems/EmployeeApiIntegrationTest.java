@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
 
-    private static final long IT = 1, HR = 2, SOFTWARE_ENGINEER = 1;
+    private static final long IT = 1, HR = 2, EMPLOYEE_ROLE = 3;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -95,7 +95,7 @@ class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
     @Test
     void invalidFieldsReturn400WithAMessagePerField() throws Exception {
         EmployeeRequest invalid = new EmployeeRequest("Rahul 123", "not-an-email", "98765", "1234", "ABC123",
-                LocalDate.now().plusDays(1), null, "", IT, SOFTWARE_ENGINEER, LocalDate.now(),
+                LocalDate.now().plusDays(1), null, "", IT, EMPLOYEE_ROLE, LocalDate.now(),
                 BigDecimal.ZERO, null, null);
 
         createEmployee(invalid)
@@ -130,7 +130,7 @@ class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
 
         // Aadhaar / PAN omitted on update -> kept as they are
         EmployeeRequest update = new EmployeeRequest("Rahul  Kumar  Sharma", "rahul.k@example.com", "9999999999",
-                null, null, LocalDate.of(1995, 4, 12), Gender.MALE, "New address", IT, SOFTWARE_ENGINEER,
+                null, null, LocalDate.of(1995, 4, 12), Gender.MALE, "New address", IT, EMPLOYEE_ROLE,
                 LocalDate.of(2021, 6, 1), new BigDecimal("700000"), EmployeeStatus.ON_LEAVE, null);
         asAdmin(put("/api/employees/{id}", id).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(update)))
@@ -143,7 +143,7 @@ class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.aadhaarNumber").value("XXXX-XXXX-9012"));
 
         EmployeeRequest moveDepartment = new EmployeeRequest("Rahul Sharma", "rahul.k@example.com", "9999999999",
-                null, null, LocalDate.of(1995, 4, 12), Gender.MALE, "New address", HR, SOFTWARE_ENGINEER,
+                null, null, LocalDate.of(1995, 4, 12), Gender.MALE, "New address", HR, EMPLOYEE_ROLE,
                 LocalDate.of(2021, 6, 1), new BigDecimal("700000"), null, null);
         asAdmin(put("/api/employees/{id}", id).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(moveDepartment)))
@@ -157,7 +157,7 @@ class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
         long id = createAndGetId(create);
 
         EmployeeRequest stale = new EmployeeRequest(create.fullName(), create.email(), create.mobile(), null, null,
-                create.dateOfBirth(), create.gender(), create.address(), IT, SOFTWARE_ENGINEER,
+                create.dateOfBirth(), create.gender(), create.address(), IT, EMPLOYEE_ROLE,
                 create.joiningDate(), create.annualSalary(), null, 99L);
         asAdmin(put("/api/employees/{id}", id).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stale)))
@@ -225,7 +225,7 @@ class EmployeeApiIntegrationTest extends AbstractIntegrationTest {
 
     private static EmployeeRequest request(String name, String email, String aadhaar, String pan, long departmentId) {
         return new EmployeeRequest(name, email, "9876543210", aadhaar, pan, LocalDate.of(1995, 4, 12),
-                Gender.MALE, "12 MG Road, Bengaluru", departmentId, SOFTWARE_ENGINEER, LocalDate.of(2021, 6, 1),
+                Gender.MALE, "12 MG Road, Bengaluru", departmentId, EMPLOYEE_ROLE, LocalDate.of(2021, 6, 1),
                 new BigDecimal("650000"), null, null);
     }
 

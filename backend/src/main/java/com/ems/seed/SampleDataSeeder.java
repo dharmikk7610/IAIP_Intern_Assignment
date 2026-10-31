@@ -45,37 +45,33 @@ public class SampleDataSeeder implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(SampleDataSeeder.class);
 
     private static final long IT = 1, HR = 2, FINANCE = 3, SALES = 4, ADMIN = 5;
-    private static final long SOFTWARE_ENGINEER = 1, SENIOR_SOFTWARE_ENGINEER = 2, TEAM_LEAD = 3,
-            HR_EXECUTIVE = 4, HR_MANAGER = 5, ACCOUNTANT = 6, FINANCE_MANAGER = 7,
-            SALES_EXECUTIVE = 8, SALES_MANAGER = 9, OFFICE_ADMINISTRATOR = 10;
+    private static final long ROLE_ADMIN = 1, ROLE_MANAGER = 2, ROLE_EMPLOYEE = 3;
 
     private record Sample(String name, Gender gender, long departmentId, long roleId, String joiningDate,
                           long salary, EmployeeStatus status, String dateOfBirth, String city) {
     }
 
     private static final List<Sample> SAMPLES = List.of(
-            new Sample("Rahul Sharma", MALE, IT, SOFTWARE_ENGINEER, "2021-06-01", 450000, ACTIVE, "1995-04-12", "Bengaluru"),
-            new Sample("Priya Nair", FEMALE, IT, SENIOR_SOFTWARE_ENGINEER, "2018-03-15", 1250000, ACTIVE, "1990-08-21", "Kochi"),
-            new Sample("Arjun Mehta", MALE, IT, TEAM_LEAD, "2016-07-11", 1800000, ACTIVE, "1987-01-30", "Pune"),
-            new Sample("Sneha Kulkarni", FEMALE, IT, SOFTWARE_ENGINEER, "2023-01-09", 420000, ACTIVE, "1999-11-05", "Pune"),
-            new Sample("Vikram Singh", MALE, IT, SOFTWARE_ENGINEER, "2024-02-19", 280000, ON_LEAVE, "2001-06-17", "Jaipur"),
-            new Sample("Ananya Iyer", FEMALE, IT, SENIOR_SOFTWARE_ENGINEER, "2019-09-23", 950000, INACTIVE, "1992-03-08", "Chennai"),
-            new Sample("Kavita Joshi", FEMALE, HR, HR_MANAGER, "2017-05-02", 1100000, ACTIVE, "1986-12-14", "Mumbai"),
-            new Sample("Rohan Desai", MALE, HR, HR_EXECUTIVE, "2022-08-16", 350000, ACTIVE, "1997-07-25", "Ahmedabad"),
-            new Sample("Meera Pillai", FEMALE, HR, HR_EXECUTIVE, "2024-06-03", 240000, ACTIVE, "2002-02-11", "Thiruvananthapuram"),
-            new Sample("Sanjay Gupta", MALE, HR, HR_EXECUTIVE, "2020-11-30", 310000, INACTIVE, "1994-09-19", "Lucknow"),
-            new Sample("Amit Verma", MALE, FINANCE, FINANCE_MANAGER, "2015-04-20", 1500000, ACTIVE, "1984-05-03", "Delhi"),
-            new Sample("Pooja Reddy", FEMALE, FINANCE, ACCOUNTANT, "2021-10-04", 480000, ACTIVE, "1996-10-27", "Hyderabad"),
-            new Sample("Karthik Rao", MALE, FINANCE, ACCOUNTANT, "2022-03-14", 360000, ON_LEAVE, "1995-01-16", "Mysuru"),
-            new Sample("Neha Bansal", FEMALE, FINANCE, ACCOUNTANT, "2025-01-06", 190000, ACTIVE, "2003-04-09", "Chandigarh"),
-            new Sample("Suresh Patil", MALE, SALES, SALES_MANAGER, "2016-12-01", 1050000, ACTIVE, "1985-08-28", "Nagpur"),
-            new Sample("Divya Menon", FEMALE, SALES, SALES_EXECUTIVE, "2022-07-18", 380000, ACTIVE, "1998-06-02", "Kozhikode"),
-            new Sample("Imran Khan", MALE, SALES, SALES_EXECUTIVE, "2023-09-25", 260000, ACTIVE, "2000-12-22", "Bhopal"),
-            new Sample("Lakshmi Narayan", FEMALE, SALES, SALES_EXECUTIVE, "2019-02-11", 550000, INACTIVE, "1993-03-15", "Coimbatore"),
-            new Sample("Aditya Chauhan", MALE, SALES, SALES_EXECUTIVE, "2025-03-17", 150000, ACTIVE, "2003-09-01", "Indore"),
-            new Sample("Ritu Agarwal", FEMALE, ADMIN, OFFICE_ADMINISTRATOR, "2020-01-13", 450000, ACTIVE, "1991-07-07", "Kolkata"),
-            new Sample("Manoj Tiwari", MALE, ADMIN, OFFICE_ADMINISTRATOR, "2023-04-10", 220000, ACTIVE, "1999-02-18", "Patna"),
-            new Sample("Alex Fernandes", OTHER, ADMIN, OFFICE_ADMINISTRATOR, "2018-08-27", 720000, ON_LEAVE, "1989-10-10", "Panaji")
+            new Sample("Rahul Sharma", MALE, IT, ROLE_EMPLOYEE, "2021-06-01", 450000, ACTIVE, "1995-04-12", "Bengaluru"),
+            new Sample("Priya Nair", FEMALE, IT, ROLE_EMPLOYEE, "2018-03-15", 1250000, ACTIVE, "1990-08-21", "Kochi"),
+            new Sample("Arjun Mehta", MALE, IT, ROLE_MANAGER, "2016-07-11", 1800000, ACTIVE, "1987-01-30", "Pune"),
+            new Sample("Vikram Singh", MALE, IT, ROLE_EMPLOYEE, "2024-02-19", 280000, ON_LEAVE, "2001-06-17", "Jaipur"),
+            new Sample("Ananya Iyer", FEMALE, IT, ROLE_EMPLOYEE, "2019-09-23", 950000, INACTIVE, "1992-03-08", "Chennai"),
+            new Sample("Kavita Joshi", FEMALE, HR, ROLE_MANAGER, "2017-05-02", 1100000, ACTIVE, "1986-12-14", "Mumbai"),
+            new Sample("Rohan Desai", MALE, HR, ROLE_EMPLOYEE, "2022-08-16", 350000, ACTIVE, "1997-07-25", "Ahmedabad"),
+            new Sample("Meera Pillai", FEMALE, HR, ROLE_EMPLOYEE, "2024-06-03", 240000, ACTIVE, "2002-02-11", "Thiruvananthapuram"),
+            new Sample("Sanjay Gupta", MALE, HR, ROLE_EMPLOYEE, "2020-11-30", 310000, INACTIVE, "1994-09-19", "Lucknow"),
+            new Sample("Amit Verma", MALE, FINANCE, ROLE_MANAGER, "2015-04-20", 1500000, ACTIVE, "1984-05-03", "Delhi"),
+            new Sample("Pooja Reddy", FEMALE, FINANCE, ROLE_EMPLOYEE, "2021-10-04", 480000, ACTIVE, "1996-10-27", "Hyderabad"),
+            new Sample("Karthik Rao", MALE, FINANCE, ROLE_EMPLOYEE, "2022-03-14", 360000, ON_LEAVE, "1995-01-16", "Mysuru"),
+            new Sample("Suresh Patil", MALE, SALES, ROLE_MANAGER, "2016-12-01", 1050000, ACTIVE, "1985-08-28", "Nagpur"),
+            new Sample("Divya Menon", FEMALE, SALES, ROLE_EMPLOYEE, "2022-07-18", 380000, ACTIVE, "1998-06-02", "Kozhikode"),
+            new Sample("Imran Khan", MALE, SALES, ROLE_EMPLOYEE, "2023-09-25", 260000, ACTIVE, "2000-12-22", "Bhopal"),
+            new Sample("Lakshmi Narayan", FEMALE, SALES, ROLE_EMPLOYEE, "2019-02-11", 550000, INACTIVE, "1993-03-15", "Coimbatore"),
+            new Sample("Aditya Chauhan", MALE, SALES, ROLE_EMPLOYEE, "2025-03-17", 150000, ACTIVE, "2003-09-01", "Indore"),
+            new Sample("Ritu Agarwal", FEMALE, ADMIN, ROLE_ADMIN, "2020-01-13", 450000, ACTIVE, "1991-07-07", "Kolkata"),
+            new Sample("Manoj Tiwari", MALE, ADMIN, ROLE_ADMIN, "2023-04-10", 220000, ACTIVE, "1999-02-18", "Patna"),
+            new Sample("Alex Fernandes", OTHER, ADMIN, ROLE_ADMIN, "2018-08-27", 720000, ON_LEAVE, "1989-10-10", "Panaji")
     );
 
     /** Sample transfers, applied in this order. Imran moves twice to show a multi-step history. */

@@ -38,7 +38,7 @@ validation on both ends, and JWT authentication with role-based authorization.
 | JWT authentication, roles ADMIN / MANAGER / EMPLOYEE | ✅ Implemented & tested |
 | Aadhaar / PAN encryption at rest, masking, excluded from search | ✅ Implemented & tested |
 | React frontend (list, filters, form, details, transfer, login) | ✅ Implemented & checked end-to-end in a browser |
-| Sample data: 5 departments, 10 roles, 22 employees, 4 transfers, 3 users | ✅ Inserted automatically |
+| Sample data: 5 departments, 3 roles, 20 employees, 4 transfers, 3 users | ✅ Inserted automatically |
 | Swagger UI, OpenAPI JSON, Postman collection | ✅ Included |
 
 ## Project structure
@@ -93,7 +93,7 @@ mysql -u root -p EMPLOYEEMNG < database/02_seed_data.sql
 ```
 
 `01_schema.sql` creates the `EMPLOYEEMNG` database and all 7 tables. `02_seed_data.sql` inserts the
-5 departments, 10 roles and the employee-code sequences. Both scripts are safe to re-run.
+5 departments, 3 roles (Admin, Manager, Employee) and the employee-code sequences. Both scripts are safe to re-run.
 
 ### 2. Backend configuration (secrets stay out of Git)
 
@@ -133,9 +133,9 @@ mvnw.cmd spring-boot:run        # Windows
 > That's on purpose: Aadhaar / PAN must be encrypted with *your* `ENCRYPTION_KEY` and passwords
 > BCrypt-hashed, which only the application can do.
 
-On the first start (log line `Inserted 22 sample employees`) the backend adds:
+On the first start (log line `Inserted 20 sample employees`) the backend adds:
 
-- **22 employees** across all 5 departments, with different roles, salaries (₹1.5 L – ₹18 L), genders and
+- **20 employees** across all 5 departments, with different roles, salaries (₹1.5 L – ₹18 L), genders and
   statuses (Active / On Leave / Inactive)
 - **4 department transfers** with history (Imran Khan was transferred twice)
 - **3 demo logins**: `admin`, `manager`, `rahul` (see [Demo accounts](#demo-accounts-and-permissions))
@@ -146,8 +146,8 @@ be run first; without departments the backend logs a warning and skips the sampl
 
 **Accessing the sample data:**
 
-- **UI:** open http://localhost:5173 and log in as `admin` / `Admin@123` (the login page has one-click demo
-  accounts). The employee list shows all 22 employees.
+- **UI:** open http://localhost:5173 and log in as `admin` / `Admin@123` (all demo accounts are listed in
+  [Demo accounts](#demo-accounts-and-permissions)). The employee list shows all 20 employees.
 - **API:** Swagger UI or the Postman collection: log in with `POST /api/auth/login`, then call `GET /api/employees`.
 - **Database:** `SELECT employee_code, full_name, status FROM EMPLOYEEMNG.employees;` and
   `SELECT * FROM EMPLOYEEMNG.employee_transfer_history;` (the Aadhaar / PAN columns hold only ciphertext).
@@ -324,8 +324,10 @@ Applied in the React form (immediate feedback) **and** in the backend (Jakarta B
 - **Minimum age:** employees must be at least 18. The assignment doesn't state this.
 - **Salary ranges:** `minSalary` is inclusive and `maxSalary` exclusive for both presets and the custom range.
 - **Codes are never reused** after a transfer, matching the assignment's example (Rahul gets H0002, not H0001).
-- **Role** means job designation (the `roles` table). Login roles ADMIN / MANAGER / EMPLOYEE are a separate
-  `user_role` column on `users`.
+- **Roles:** exactly 3 roles, Admin, Manager and Employee, as required by the assignment. Two places use them:
+  - The `roles` table holds the role of each employee record (shown, filtered, sorted and searched).
+  - The login role in `users.user_role` (ADMIN / MANAGER / EMPLOYEE) decides permissions. An employee's role in
+    the `roles` table grants no permissions on its own; access depends only on the login account.
 - **Edits:** Aadhaar / PAN may be left blank when editing to keep the stored values.
 - **Inactive employees can't be transferred.** Employees on leave can.
 - **Status search:** searching by status matches word starts ("active" finds Active but not Inactive).

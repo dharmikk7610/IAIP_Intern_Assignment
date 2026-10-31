@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS departments (
 );
 
 -- ---------------------------------------------------------------------
--- Roles = job designations (Software Engineer, HR Executive, ...).
--- Login roles (ADMIN/MANAGER/EMPLOYEE) live in users.user_role.
+-- Roles assigned to employee records (Admin, Manager, Employee).
+-- Login / authorization roles (ADMIN/MANAGER/EMPLOYEE) live in users.user_role.
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS roles (
     id   BIGINT      NOT NULL AUTO_INCREMENT,

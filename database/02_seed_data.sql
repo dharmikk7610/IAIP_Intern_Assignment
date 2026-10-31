@@ -1,5 +1,5 @@
 -- =====================================================================
--- Reference data: departments, roles (designations), code sequences.
+-- Reference data: 5 departments, 3 roles, code sequences.
 -- Safe to run more than once (INSERT IGNORE).
 --   mysql -u root -p EMPLOYEEMNG < database/02_seed_data.sql
 --
@@ -17,17 +17,12 @@ INSERT IGNORE INTO departments (id, name, code_prefix) VALUES
     (4, 'Sales',   'S'),
     (5, 'Admin',   'A');
 
+-- The three roles required by the assignment. An employee's role here is data only;
+-- permissions come from the login account (users.user_role).
 INSERT IGNORE INTO roles (id, name) VALUES
-    (1,  'Software Engineer'),
-    (2,  'Senior Software Engineer'),
-    (3,  'Team Lead'),
-    (4,  'HR Executive'),
-    (5,  'HR Manager'),
-    (6,  'Accountant'),
-    (7,  'Finance Manager'),
-    (8,  'Sales Executive'),
-    (9,  'Sales Manager'),
-    (10, 'Office Administrator');
+    (1, 'Admin'),
+    (2, 'Manager'),
+    (3, 'Employee');
 
 -- next_value = number the NEXT employee in that department will get
 INSERT IGNORE INTO employee_code_sequences (department_id, next_value) VALUES

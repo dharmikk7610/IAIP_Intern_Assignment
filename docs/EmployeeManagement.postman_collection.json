@@ -160,7 +160,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Postman Test User\",\n  \"email\": \"{{email}}\",\n  \"mobile\": \"9123456789\",\n  \"aadhaarNumber\": \"{{aadhaar}}\",\n  \"panNumber\": \"{{pan}}\",\n  \"dateOfBirth\": \"1996-08-15\",\n  \"gender\": \"MALE\",\n  \"address\": \"221 MG Road, Bengaluru\",\n  \"departmentId\": 1,\n  \"roleId\": 1,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 480000,\n  \"status\": \"ACTIVE\"\n}"
+              "raw": "{\n  \"fullName\": \"Postman Test User\",\n  \"email\": \"{{email}}\",\n  \"mobile\": \"9123456789\",\n  \"aadhaarNumber\": \"{{aadhaar}}\",\n  \"panNumber\": \"{{pan}}\",\n  \"dateOfBirth\": \"1996-08-15\",\n  \"gender\": \"MALE\",\n  \"address\": \"221 MG Road, Bengaluru\",\n  \"departmentId\": 1,\n  \"roleId\": 3,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 480000,\n  \"status\": \"ACTIVE\"\n}"
             },
             "url": "{{baseUrl}}/employees"
           }
@@ -172,7 +172,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Rahul 123\",\n  \"email\": \"not-an-email\",\n  \"mobile\": \"98765\",\n  \"aadhaarNumber\": \"1234\",\n  \"panNumber\": \"ABC123\",\n  \"dateOfBirth\": \"2099-01-01\",\n  \"gender\": \"MALE\",\n  \"address\": \"\",\n  \"departmentId\": 1,\n  \"roleId\": 1,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 0\n}"
+              "raw": "{\n  \"fullName\": \"Rahul 123\",\n  \"email\": \"not-an-email\",\n  \"mobile\": \"98765\",\n  \"aadhaarNumber\": \"1234\",\n  \"panNumber\": \"ABC123\",\n  \"dateOfBirth\": \"2099-01-01\",\n  \"gender\": \"MALE\",\n  \"address\": \"\",\n  \"departmentId\": 1,\n  \"roleId\": 3,\n  \"joiningDate\": \"2024-02-01\",\n  \"annualSalary\": 0\n}"
             },
             "url": "{{baseUrl}}/employees"
           }

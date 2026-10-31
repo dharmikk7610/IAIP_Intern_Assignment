@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-/** Job role / designation, e.g. "Software Engineer". */
+/** Role of an employee record: Admin, Manager or Employee. Permissions come from {@link UserRole}. */
 @Entity
 @Table(name = "roles", uniqueConstraints = @UniqueConstraint(name = "uk_roles_name", columnNames = "name"))
 public class Role {

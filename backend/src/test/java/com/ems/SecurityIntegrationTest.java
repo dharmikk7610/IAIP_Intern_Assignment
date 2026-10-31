@@ -189,14 +189,14 @@ class SecurityIntegrationTest extends AbstractIntegrationTest {
     private long create(String name, int n) {
         return employeeService.create(new EmployeeRequest(name, "user" + n + "@example.com", "9876543210",
                 String.format("5555%08d", n), String.format("ABCDE%04dF", n), LocalDate.of(1995, 4, 12),
-                Gender.MALE, "Bengaluru", 1L, 1L, LocalDate.of(2021, 6, 1), new BigDecimal("450000"),
+                Gender.MALE, "Bengaluru", 1L, 3L, LocalDate.of(2021, 6, 1), new BigDecimal("450000"),
                 null, null)).id();
     }
 
     /** PUT body for the employee made by create(.., 1), with only address and status varied. */
     private String updateBody(String address, EmployeeStatus status) throws Exception {
         return objectMapper.writeValueAsString(new EmployeeRequest("Rahul Sharma", "user1@example.com",
-                "9876543210", null, null, LocalDate.of(1995, 4, 12), Gender.MALE, address, 1L, 1L,
+                "9876543210", null, null, LocalDate.of(1995, 4, 12), Gender.MALE, address, 1L, 3L,
                 LocalDate.of(2021, 6, 1), new BigDecimal("450000"), status, null));
     }
 }

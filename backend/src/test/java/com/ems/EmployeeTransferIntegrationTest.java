@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class EmployeeTransferIntegrationTest extends AbstractIntegrationTest {
 
-    private static final long IT = 1, HR = 2, FINANCE = 3, SOFTWARE_ENGINEER = 1;
+    private static final long IT = 1, HR = 2, FINANCE = 3, EMPLOYEE_ROLE = 3;
 
     @Autowired
     private EmployeeService employeeService;
@@ -195,7 +195,7 @@ class EmployeeTransferIntegrationTest extends AbstractIntegrationTest {
     private long create(String name, int n, long departmentId, EmployeeStatus status) {
         return employeeService.create(new EmployeeRequest(name, "person" + n + "@example.com", "9876543210",
                 String.format("5555%08d", n), String.format("ABCDE%04dF", n), LocalDate.of(1995, 4, 12),
-                Gender.MALE, "Bengaluru", departmentId, SOFTWARE_ENGINEER, LocalDate.of(2021, 6, 1),
+                Gender.MALE, "Bengaluru", departmentId, EMPLOYEE_ROLE, LocalDate.of(2021, 6, 1),
                 new BigDecimal("450000"), status, null)).id();
     }
 

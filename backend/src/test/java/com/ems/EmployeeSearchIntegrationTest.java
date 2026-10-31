@@ -21,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EmployeeSearchIntegrationTest extends AbstractIntegrationTest {
 
     private static final long IT = 1, HR = 2, FINANCE = 3;
-    private static final long SOFTWARE_ENGINEER = 1, SENIOR_SOFTWARE_ENGINEER = 2, HR_EXECUTIVE = 4,
-            HR_MANAGER = 5, FINANCE_MANAGER = 7;
+    private static final long MANAGER_ROLE = 2, EMPLOYEE_ROLE = 3;
     @Autowired
     private EmployeeService employeeService;
 
@@ -37,16 +36,16 @@ class EmployeeSearchIntegrationTest extends AbstractIntegrationTest {
     @BeforeEach
     void createEmployees() {
         create("Rahul Sharma", "rahul.sharma@example.com", "9000000001", "111122223333", "AAAAA1111A",
-                Gender.MALE, "MG Road, Bengaluru", IT, SOFTWARE_ENGINEER, "2021-06-01", "300000", EmployeeStatus.ACTIVE);
+                Gender.MALE, "MG Road, Bengaluru", IT, EMPLOYEE_ROLE, "2021-06-01", "300000", EmployeeStatus.ACTIVE);
         create("Priya Nair", "priya.nair@example.com", "9000000002", "111122224444", "AAAAA2222A",
-                Gender.FEMALE, "Marine Drive, Kochi", IT, SENIOR_SOFTWARE_ENGINEER, "2022-01-10", "500000",
+                Gender.FEMALE, "Marine Drive, Kochi", IT, EMPLOYEE_ROLE, "2022-01-10", "500000",
                 EmployeeStatus.ON_LEAVE);
         create("Kavita Joshi", "kavita.joshi@example.com", "9000000003", "111122225555", "AAAAA3333A",
-                Gender.FEMALE, "FC Road, Pune", HR, HR_MANAGER, "2019-03-01", "1000000", EmployeeStatus.ACTIVE);
+                Gender.FEMALE, "FC Road, Pune", HR, MANAGER_ROLE, "2019-03-01", "1000000", EmployeeStatus.ACTIVE);
         create("Rohan Desai", "rohan.desai@example.com", "9000000004", "111122226666", "AAAAA4444A",
-                Gender.MALE, "Andheri, Mumbai", HR, HR_EXECUTIVE, "2023-05-20", "299999", EmployeeStatus.INACTIVE);
+                Gender.MALE, "Andheri, Mumbai", HR, EMPLOYEE_ROLE, "2023-05-20", "299999", EmployeeStatus.INACTIVE);
         create("Amit Verma", "amit.verma@example.com", "9000000005", "111122227777", "AAAAA5555A",
-                Gender.MALE, "Block_7, Delhi", FINANCE, FINANCE_MANAGER, "2020-07-15", "750000", EmployeeStatus.ACTIVE);
+                Gender.MALE, "Block_7, Delhi", FINANCE, MANAGER_ROLE, "2020-07-15", "750000", EmployeeStatus.ACTIVE);
     }
 
     @Test
@@ -63,7 +62,7 @@ class EmployeeSearchIntegrationTest extends AbstractIntegrationTest {
         expectCodes("search", "9000000004", "H0002");
         expectCodes("search", "pune", "H0001");
         expectCodes("search", "finance", "F0001");
-        expectCodes("search", "senior software", "I0002");
+        expectCodes("search", "manager", "H0001", "F0001");
     }
 
     @Test
@@ -98,7 +97,7 @@ class EmployeeSearchIntegrationTest extends AbstractIntegrationTest {
     @Test
     void individualFiltersWork() throws Exception {
         expectCodes("departmentId", String.valueOf(HR), "H0001", "H0002");
-        expectCodes("roleId", String.valueOf(HR_EXECUTIVE), "H0002");
+        expectCodes("roleId", String.valueOf(MANAGER_ROLE), "H0001", "F0001");
         expectCodes("status", "ON_LEAVE", "I0002");
         expectCodes("gender", "FEMALE", "I0002", "H0001");
         search(get("/api/employees").param("joinedFrom", "2021-01-01").param("joinedTo", "2022-01-10"))

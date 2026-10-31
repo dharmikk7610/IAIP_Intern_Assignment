@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IAIP 2026 – Employee Management System – Assignment Documentation</title>
+<!--
+  Editable source of IAIP_2026_Employee_Management_System_Assignment.pdf.
+  Rebuild the PDF with:  python build_pdf.py   (see that file for requirements)
+  Screenshots are real captures of the running application, stored in ./screenshots.
+-->
+<style>
+  :root {
+    --navy: #14284b;
+    --navy-2: #1f3a6b;
+    --accent: #2d5aa0;
+    --ink: #1c2430;
+    --muted: #5a6577;
+    --line: #d5dbe5;
+    --soft: #f2f4f8;
+    --soft-2: #e8edf5;
+    --warn-bg: #fff6df;
+    --warn-line: #e3b341;
+  }
+  @page { size: A4; margin: 22mm 17mm 20mm 17mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--ink);
+    background: #fff;
+  }
+  code, pre, .mono { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; }
+  code { font-size: 8.8pt; background: var(--soft); border: 1px solid var(--soft-2); border-radius: 3px; padding: 0 3px; }
+  pre {
+    font-size: 8.2pt; line-height: 1.4; background: #f6f8fb; border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 4px; padding: 8px 10px; margin: 6px 0 10px;
+    white-space: pre-wrap; word-break: break-word; break-inside: avoid;
+  }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* ---------- headings ---------- */
+  h1 {
+    font-size: 17pt; color: var(--navy); margin: 0 0 10px; padding-bottom: 6px;
+    border-bottom: 2px solid var(--navy); break-before: page; break-after: avoid;
+  }
+  h1 .num { display: inline-block; min-width: 26px; color: var(--accent); }
+  h2 { font-size: 12pt; color: var(--navy-2); margin: 16px 0 6px; break-after: avoid; }
+  h3 { font-size: 10.5pt; color: var(--navy); margin: 12px 0 4px; break-after: avoid; }
+  p { margin: 0 0 7px; }
+  ul, ol { margin: 2px 0 8px; padding-left: 20px; }
+  li { margin: 1px 0; }
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ---------- tables ---------- */
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 8.8pt; break-inside: auto; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  th { background: var(--navy); color: #fff; text-align: left; font-weight: 600; padding: 5px 7px; }
+  td { border-bottom: 1px solid var(--line); padding: 4px 7px; vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #f8f9fc; }
+  table.kv td:first-child { width: 30%; font-weight: 600; color: var(--navy); }
+  td.c, th.c { text-align: center; }
+  .yes { color: #1d7a3e; font-weight: 700; }
+  .no { color: #b3261e; font-weight: 700; }
+
+  /* ---------- callouts, figures ---------- */
+  .note { background: var(--soft); border-left: 3px solid var(--accent); padding: 7px 10px; margin: 8px 0 12px; break-inside: avoid; }
+  .warn { background: var(--warn-bg); border-left: 3px solid var(--warn-line); padding: 7px 10px; margin: 8px 0 12px; break-inside: avoid; }
+  .tag { display: inline-block; font-size: 7.8pt; font-weight: 700; padding: 0 6px; border-radius: 8px; letter-spacing: .02em; }
+  .tag-ok { background: #e3f3e8; color: #1d7a3e; }
+  .tag-info { background: var(--soft-2); color: var(--navy-2); }
+  figure { margin: 8px 0 14px; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid var(--line); border-radius: 4px; display: block; }
+  figure.half img { width: 100%; }
+  figcaption { font-size: 8.8pt; color: var(--muted); margin-top: 4px; }
+  figcaption b { color: var(--navy); }
+  .diagram { width: 100%; display: block; margin: 6px 0 4px; }
+  .shot-meta { font-size: 9pt; margin: 2px 0 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ---------- cover ---------- */
+  .cover { height: 253mm; display: flex; flex-direction: column; }
+  .cover-band { background: var(--navy); color: #fff; padding: 22px 26px; border-radius: 4px; }
+  .cover-band .prog { font-size: 11pt; letter-spacing: .06em; text-transform: uppercase; opacity: .9; }
+  .cover-band .dom { font-size: 10pt; opacity: .85; margin-top: 2px; }
+  .cover-title { margin: 70px 0 6px; font-size: 32pt; font-weight: 700; color: var(--navy); line-height: 1.15; }
+  .cover-sub { font-size: 13pt; color: var(--muted); margin-bottom: 34px; }
+  .cover-rule { height: 4px; width: 90px; background: var(--accent); margin-bottom: 34px; }
+  .cover table.kv { font-size: 10pt; }
+  .cover table.kv td { padding: 7px 8px; }
+  .placeholder { background: var(--warn-bg); border: 1px dashed var(--warn-line); padding: 1px 8px; border-radius: 3px; font-weight: 600; color: #7a5200; }
+  .cover-foot { margin-top: auto; font-size: 8.8pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+
+  /* ---------- TOC ---------- */
+  .toc { break-before: page; }
+  .toc h1 { break-before: avoid; }
+  .toc ol { list-style: none; padding: 0; margin: 10px 0 0; }
+  .toc li { display: flex; align-items: baseline; font-size: 10.5pt; padding: 5px 0; border-bottom: 1px dotted var(--line); }
+  .toc li .n { width: 28px; color: var(--accent); font-weight: 700; }
+  .toc li .t { flex: 1; }
+  .toc li .p { width: 30px; text-align: right; font-weight: 600; color: var(--navy); }
+</style>
+</head>
+<body>
+
+<!-- =============================== COVER =============================== -->
+<section class="cover">
+  <div class="cover-band">
+    <div class="prog">Indian Army Internship Programme (IAIP) 2026</div>
+    <div class="dom">Internship Domain: Process Automation and Application Development Intern</div>
+  </div>
+
+  <div class="cover-title">Employee Management System</div>
+  <div class="cover-sub">Technical Assignment Documentation – Full-Stack Web Application</div>
+  <div class="cover-rule"></div>
+
+  <table class="kv">
+    <tr><td>Candidate Name</td><td>Dharmik Rakeshbhai Prajapati</td></tr>
+    <tr><td>Candidate Code</td><td><span class="placeholder">[ CANDIDATE CODE – TO BE FILLED ]</span></td></tr>
+    <tr><td>Programme</td><td>Indian Army Internship Programme (IAIP) 2026</td></tr>
+    <tr><td>Internship Domain</td><td>Process Automation and Application Development Intern</td></tr>
+    <tr><td>Technology Stack</td><td>React.js 19 (Vite 8) · Java 17 with Spring Boot 3.5 · MySQL</td></tr>
+    <tr><td>GitHub Repository</td><td><a href="https://github.com/dharmikk7610/IAIP_Intern_Assignment">https://github.com/dharmikk7610/IAIP_Intern_Assignment</a></td></tr>
+    <tr><td>Document Version</td><td>1.0 – 31 October 2026</td></tr>
+  </table>
+
+  <div class="cover-foot">
+    All figures, versions, API routes and test results in this document were taken from the project source code,
+    configuration files, automated test reports and screenshots of the running application. Sample data shown is
+    fictitious; no real personal data, passwords or secret keys are included.
+  </div>
+</section>
+
+<!-- =============================== TOC =============================== -->
+<section class="toc">
+  <h1 class="toc-title">Table of Contents</h1>
+  <ol id="toc">
+    <li><span class="n">1</span><span class="t">Assumptions</span><span class="p" data-sec="1">–</span></li>
+    <li><span class="n">2</span><span class="t">Project Overview</span><span class="p" data-sec="2">–</span></li>
+    <li><span class="n">3</span><span class="t">Technology Stack and Dependency Versions</span><span class="p" data-sec="3">–</span></li>
+    <li><span class="n">4</span><span class="t">System Architecture</span><span class="p" data-sec="4">–</span></li>
+    <li><span class="n">5</span><span class="t">Database Design and ER Diagram</span><span class="p" data-sec="5">–</span></li>
+    <li><span class="n">6</span><span class="t">Frontend Screenshots</span><span class="p" data-sec="6">–</span></li>
+    <li><span class="n">7</span><span class="t">Backend REST API Documentation</span><span class="p" data-sec="7">–</span></li>
+    <li><span class="n">8</span><span class="t">Employee CRUD Workflow</span><span class="p" data-sec="8">–</span></li>
+    <li><span class="n">9</span><span class="t">Search, Filters, Sorting and Pagination</span><span class="p" data-sec="9">–</span></li>
+    <li><span class="n">10</span><span class="t">Department Transfer Workflow</span><span class="p" data-sec="10">–</span></li>
+    <li><span class="n">11</span><span class="t">Authentication and Security</span><span class="p" data-sec="11">–</span></li>
+    <li><span class="n">12</span><span class="t">Validation and Error Handling</span><span class="p" data-sec="12">–</span></li>
+    <li><span class="n">13</span><span class="t">Actual Testing Results</span><span class="p" data-sec="13">–</span></li>
+    <li><span class="n">14</span><span class="t">Installation and Setup Instructions</span><span class="p" data-sec="14">–</span></li>
+    <li><span class="n">15</span><span class="t">GitHub Repository</span><span class="p" data-sec="15">–</span></li>
+    <li><span class="n">16</span><span class="t">Conclusion</span><span class="p" data-sec="16">–</span></li>
+  </ol>
+  <div class="note" style="margin-top:18px">
+    <b>Status labels used in this document.</b>
+    <span class="tag tag-ok">IMPLEMENTED</span> = present in the source code and covered by automated tests or a
+    screenshot of the running application.
+    <span class="tag tag-info">DESIGN CHOICE</span> = a deliberate rule that the assignment did not specify.
+    Anything that was not verified is stated explicitly in the text.
+  </div>
+</section>
+
+<!-- =============================== 1 ASSUMPTIONS =============================== -->
+<h1 id="s1"><span class="num">1</span> Assumptions</h1>
+<p>The following assumptions were made where the assignment left a detail open. Each one is implemented in the code
+listed in the right-hand column.</p>
+<table>
+  <thead><tr><th style="width:4%">#</th><th style="width:62%">Assumption</th><th>Where it is implemented</th></tr></thead>
+  <tbody>
+  <tr><td>1</td><td><b>Employee Code is generated automatically from the department</b>: a one-letter department prefix
+    (IT → <code>I</code>, HR → <code>H</code>, Finance → <code>F</code>, Sales → <code>S</code>, Admin → <code>A</code>)
+    followed by a 4-digit, department-wise counter, e.g. <code>I0001</code>. It cannot be entered by the user.</td>
+    <td><code>EmployeeCodeGenerator</code>, <code>EmployeeCodeSequence.allocateNextCode()</code></td></tr>
+  <tr><td>2</td><td><b>Codes are never reused.</b> After a transfer the old code is retired and the employee receives the
+    next free code of the new department.</td><td><code>employee_code_sequences.next_value</code> only increases</td></tr>
+  <tr><td>3</td><td><b>The internal Employee ID never changes</b>; a transfer changes only the department and the
+    Employee Code.</td><td><code>EmployeeTransferService.transfer</code></td></tr>
+  <tr><td>4</td><td><b>The department can be changed only through a Department Transfer</b>, not through Edit, so that
+    the code and the transfer history always match.</td><td><code>EmployeeService.update</code> (returns 400)</td></tr>
+  <tr><td>5</td><td><b>Every transfer is kept as history</b> (old/new department, old/new code, date, reason, user).
+    History rows are only inserted, never updated.</td><td><code>employee_transfer_history</code></td></tr>
+  <tr><td>6</td><td><b>Exactly three roles: Admin, Manager and Employee</b> (as required by the assignment). The
+    <code>roles</code> table holds the role of each employee record; permissions come only from the login account’s role
+    (ADMIN / MANAGER / EMPLOYEE, stored in <code>users.user_role</code>), so an employee record’s role grants no access by itself.</td>
+    <td><code>roles</code> table, <code>UserRole</code> enum</td></tr>
+  <tr><td>7</td><td><b>Role-based authorization decides access</b>: Admin has full access, Manager manages employees
+    but cannot deactivate/reactivate and sees masked Aadhaar/PAN, Employee sees only their own record.</td>
+    <td><code>@PreAuthorize</code> rules, <code>EmployeeAccess</code></td></tr>
+  <tr><td>8</td><td><b>Delete means deactivate (soft delete).</b> The status becomes INACTIVE; the record and its history
+    are kept. Only an Admin can deactivate or reactivate.</td><td><code>PATCH /api/employees/{id}/deactivate</code></td></tr>
+  <tr><td>9</td><td><b>Aadhaar and PAN are sensitive personal information</b>: stored encrypted in a separate table, masked for
+    Managers, never part of global search, and unique across employees. On edit they may be left blank to keep the stored values.</td>
+    <td><code>EmployeePersonalDetails</code>, <code>AesGcmEncryptor</code>, <code>SensitiveDataHasher</code></td></tr>
+  <tr><td>10</td><td><b>Minimum age 18</b>: date of birth not in the future, employee at least 18 years old, joining date on or
+    after the 18th birthday. <span class="tag tag-info">DESIGN CHOICE</span></td><td><code>EmployeeService.validateDates</code>, <code>validation.js</code></td></tr>
+  <tr><td>11</td><td><b>Salary ranges</b>: minimum inclusive, maximum exclusive, so presets never overlap
+    (₹3–5 LPA = ₹3,00,000 ≤ salary &lt; ₹5,00,000). The same rule applies to the custom range, whose UI label reads “Max, below (₹)”.
+    <span class="tag tag-info">DESIGN CHOICE</span></td><td><code>EmployeeSpecifications</code>, <code>salaryRanges.js</code></td></tr>
+  <tr><td>12</td><td><b>Transfer rules</b>: not to the same department, not for INACTIVE employees (ON_LEAVE is allowed),
+    transfer date not in the future, not before joining and not before the previous transfer.
+    <span class="tag tag-info">DESIGN CHOICE</span></td><td><code>EmployeeTransferService</code></td></tr>
+  <tr><td>13</td><td><b>An INACTIVE employee cannot log in</b>; the same 401 response as a wrong password is returned.</td>
+    <td><code>AuthService.login</code></td></tr>
+  <tr><td>14</td><td><b>Status search matches word starts</b>: searching “active” finds Active but not Inactive; “leave” finds On Leave.</td>
+    <td><code>EmployeeSpecifications.statusesMatching</code></td></tr>
+  <tr><td>15</td><td><b>Sample data is created by the backend on first start-up</b> (20 employees, 4 transfers, 3 demo logins),
+    because Aadhaar/PAN must be encrypted with the installation’s own key and passwords must be BCrypt-hashed. All sample
+    names, contact details and identity numbers are fictitious.</td><td><code>SampleDataSeeder</code></td></tr>
+  </tbody>
+</table>
+
+<!-- =============================== 2 OVERVIEW =============================== -->
+<h1 id="s2"><span class="num">2</span> Project Overview</h1>
+<h2>2.1 What the system does</h2>
+<p>The Employee Management System is a web application for registering employees, maintaining their personal and
+employment details, moving them between departments and finding them quickly. A React single-page application talks to a
+Spring Boot REST API, which stores data in MySQL.</p>
+
+<h2>2.2 Why it was developed and main objectives</h2>
+<p>It was developed as the technical assignment for the IAIP 2026 Process Automation and Application Development internship.
+Its objectives follow the assignment:</p>
+<ul>
+  <li>Replace manual record keeping with one central, validated employee register.</li>
+  <li>Generate unique, department-wise Employee Codes automatically and keep them consistent after transfers.</li>
+  <li>Record every department transfer as permanent history.</li>
+  <li>Let authorised users search, filter, sort and page through employees efficiently on the server.</li>
+  <li>Protect sensitive identity data (Aadhaar, PAN) and restrict actions by user role.</li>
+</ul>
+
+<h2>2.3 Problems solved</h2>
+<table>
+  <thead><tr><th style="width:38%">Problem</th><th>How the application solves it</th></tr></thead>
+  <tbody>
+  <tr><td>Duplicate or manually typed employee codes</td><td>Codes are generated by the server under a database row lock; a UNIQUE constraint is a final safety net.</td></tr>
+  <tr><td>Lost information when an employee changes department</td><td>Transfers run in one transaction and write a history row with old and new department and code.</td></tr>
+  <tr><td>Invalid or duplicate data</td><td>Same validation rules in the browser and on the server; duplicate email, Aadhaar and PAN are rejected.</td></tr>
+  <tr><td>Exposure of identity documents</td><td>Aadhaar/PAN are encrypted at rest, masked for Managers and excluded from search.</td></tr>
+  <tr><td>Slow manual lookup</td><td>Global search plus six filters, sorting and pagination executed as a single SQL query.</td></tr>
+  </tbody>
+</table>
+
+<h2>2.4 User roles</h2>
+<table>
+  <thead><tr><th>Action</th><th class="c">ADMIN</th><th class="c">MANAGER</th><th class="c">EMPLOYEE</th></tr></thead>
+  <tbody>
+  <tr><td>Search / list employees</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">✗</td></tr>
+  <tr><td>View employee details and transfer history</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c">own record only</td></tr>
+  <tr><td>View full Aadhaar / PAN</td><td class="c yes">✓</td><td class="c">masked</td><td class="c">own record only</td></tr>
+  <tr><td>Create / edit employees</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">✗</td></tr>
+  <tr><td>Transfer employees</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">✗</td></tr>
+  <tr><td>Deactivate or reactivate employees</td><td class="c yes">✓</td><td class="c no">✗</td><td class="c no">✗</td></tr>
+  </tbody>
+</table>
+<p>These rules are enforced by the backend (<code>@PreAuthorize</code>); the frontend only hides actions a role cannot use.</p>
+
+<h2>2.5 Modules</h2>
+<table>
+  <thead><tr><th style="width:26%">Module</th><th>Responsibility</th><th style="width:30%">Main source files</th></tr></thead>
+  <tbody>
+  <tr><td>Authentication</td><td>Login, JWT issue/verification, role-based route guards</td><td><code>AuthController</code>, <code>AuthService</code>, <code>JwtService</code>, <code>AuthProvider.jsx</code></td></tr>
+  <tr><td>Employee management</td><td>Register, view, edit, deactivate; personal details</td><td><code>EmployeeController</code>, <code>EmployeeService</code>, <code>EmployeeFormPage.jsx</code></td></tr>
+  <tr><td>Department transfer</td><td>Transfer with new code and history</td><td><code>EmployeeTransferController</code>, <code>EmployeeTransferService</code>, <code>TransferPage.jsx</code></td></tr>
+  <tr><td>Search and listing</td><td>Global search, filters, sorting, pagination</td><td><code>EmployeeSpecifications</code>, <code>EmployeeListPage.jsx</code></td></tr>
+  <tr><td>Lookups</td><td>Departments and roles for dropdowns</td><td><code>LookupController</code>, <code>useLookups.js</code></td></tr>
+  <tr><td>Sensitive-data protection</td><td>Encryption, keyed hashing, masking</td><td><code>security/crypto/*</code>, <code>SensitiveDataMasker</code></td></tr>
+  <tr><td>Error handling</td><td>One JSON error format with correct HTTP status</td><td><code>GlobalExceptionHandler</code>, <code>ErrorResponse</code></td></tr>
+  <tr><td>Sample data</td><td>Inserts demo employees, transfers and logins on first start</td><td><code>SampleDataSeeder</code></td></tr>
+  </tbody>
+</table>
+
+<!-- =============================== 3 TECH STACK =============================== -->
+<h1 id="s3"><span class="num">3</span> Technology Stack and Dependency Versions</h1>
+<p>Versions are taken from <code>backend/pom.xml</code>, the libraries packaged in the built backend JAR,
+<code>frontend/package-lock.json</code> and the development machine.</p>
+<table>
+  <thead><tr><th style="width:17%">Layer</th><th style="width:27%">Technology</th><th style="width:20%">Actual version</th><th>Purpose</th></tr></thead>
+  <tbody>
+  <tr><td>Frontend</td><td>React / React DOM</td><td>19.3.1</td><td>User interface</td></tr>
+  <tr><td>Frontend</td><td>React Router DOM</td><td>7.18.5</td><td>Client-side routing and route guards</td></tr>
+  <tr><td>Frontend</td><td>Axios</td><td>1.21.0</td><td>HTTP client for the REST API</td></tr>
+  <tr><td>Build tool</td><td>Vite (+ @vitejs/plugin-react 6.1.2)</td><td>8.3.5</td><td>Development server (with <code>/api</code> proxy) and production build</td></tr>
+  <tr><td>Code quality</td><td>oxlint</td><td>1.90.0</td><td>JavaScript / React linting</td></tr>
+  <tr><td>Language</td><td>Java</td><td>17 (JDK 17.0.10 used)</td><td>Backend development</td></tr>
+  <tr><td>Backend</td><td>Spring Boot (Spring Framework 6.2.19)</td><td>3.5.16</td><td>REST APIs, dependency injection, configuration</td></tr>
+  <tr><td>Web server</td><td>Embedded Apache Tomcat</td><td>10.1.55</td><td>HTTP server inside the Spring Boot application</td></tr>
+  <tr><td>ORM</td><td>Spring Data JPA / Hibernate ORM</td><td>3.5.13 / 6.6.53.Final</td><td>Entities, repositories, dynamic search queries</td></tr>
+  <tr><td>Validation</td><td>Jakarta Bean Validation (spring-boot-starter-validation)</td><td>3.5.16</td><td>Request field validation</td></tr>
+  <tr><td>Security</td><td>Spring Security</td><td>6.5.11</td><td>Filter chain, role-based authorization, BCrypt</td></tr>
+  <tr><td>Authentication</td><td>JJWT (jjwt-api / impl / jackson)</td><td>0.12.6</td><td>JWT creation and verification (HS256)</td></tr>
+  <tr><td>Database</td><td>MySQL Server</td><td>9.0.1 (supports MySQL 8+)</td><td>Data persistence</td></tr>
+  <tr><td>JDBC driver</td><td>MySQL Connector/J</td><td>9.7.0</td><td>Database connectivity</td></tr>
+  <tr><td>API docs</td><td>springdoc-openapi (Swagger UI, OpenAPI 3.1)</td><td>2.8.17</td><td>Interactive API documentation</td></tr>
+  <tr><td>Testing</td><td>JUnit Jupiter, Spring Boot Test, MockMvc</td><td>5.12.2 / 3.5.16</td><td>Automated integration and unit tests</td></tr>
+  <tr><td>Build</td><td>Maven Wrapper (downloads Maven)</td><td>3.9.11</td><td>Backend dependency management and build</td></tr>
+  <tr><td>Runtime</td><td>Node.js / npm</td><td>24.11.0 / 10.9.1 (Node 20+ required)</td><td>Frontend tooling</td></tr>
+  <tr><td>API testing</td><td>Postman collection (19 requests)</td><td>–</td><td>Ready-made API requests (<code>docs/</code>)</td></tr>
+  </tbody>
+</table>
+
+<!-- =============================== 4 ARCHITECTURE =============================== -->
+<h1 id="s4"><span class="num">4</span> System Architecture</h1>
+<p>The system is a three-tier application: a React single-page application in the browser, a stateless Spring Boot
+REST API, and a MySQL database. All communication between the tiers is JSON over HTTP; the browser never accesses the
+database directly.</p>
+
+<svg class="diagram" viewBox="0 0 760 520" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="11">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2d5aa0"/></marker>
+  </defs>
+  <!-- Frontend tier -->
+  <rect x="10" y="8" width="740" height="118" rx="6" fill="#eef2f8" stroke="#2d5aa0"/>
+  <text x="22" y="27" font-weight="700" fill="#14284b" font-size="12">Browser – React 19 single-page application (Vite)</text>
+  <rect x="22" y="38" width="170" height="76" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="32" y="56" font-weight="700" fill="#14284b">Pages</text>
+  <text x="32" y="72" fill="#333">Login, Employee List,</text><text x="32" y="86" fill="#333">Form (Add/Edit), Details,</text><text x="32" y="100" fill="#333">Transfer</text>
+  <rect x="204" y="38" width="170" height="76" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="214" y="56" font-weight="700" fill="#14284b">Auth &amp; routing</text>
+  <text x="214" y="72" fill="#333">AuthProvider (session),</text><text x="214" y="86" fill="#333">RequireAuth route guard,</text><text x="214" y="100" fill="#333">role-based navigation</text>
+  <rect x="386" y="38" width="170" height="76" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="396" y="56" font-weight="700" fill="#14284b">Validation &amp; UI state</text>
+  <text x="396" y="72" fill="#333">validation.js rules,</text><text x="396" y="86" fill="#333">filters in URL query,</text><text x="396" y="100" fill="#333">toasts, pagination</text>
+  <rect x="568" y="38" width="170" height="76" rx="4" fill="#fff" stroke="#2d5aa0" stroke-width="1.5"/>
+  <text x="578" y="56" font-weight="700" fill="#14284b">API layer (Axios)</text>
+  <text x="578" y="72" fill="#333">api/client.js: baseURL /api,</text><text x="578" y="86" fill="#333">adds “Bearer &lt;JWT&gt;”,</text><text x="578" y="100" fill="#333">401 → automatic logout</text>
+
+  <!-- HTTP arrow -->
+  <line x1="653" y1="126" x2="653" y2="160" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="600" y1="160" x2="600" y2="126" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="662" y="148" fill="#14284b" font-size="10">HTTP JSON request</text>
+  <text x="430" y="148" fill="#14284b" font-size="10">JSON response / ErrorResponse</text>
+  <text x="22" y="148" fill="#5a6577" font-size="10">Development: Vite proxies /api → http://localhost:9998</text>
+
+  <!-- Backend tier -->
+  <rect x="10" y="164" width="740" height="268" rx="6" fill="#f6f8fb" stroke="#14284b"/>
+  <text x="22" y="183" font-weight="700" fill="#14284b" font-size="12">Spring Boot 3.5 REST API (port 9998) – stateless</text>
+  <!-- security strip -->
+  <rect x="22" y="192" width="560" height="38" rx="4" fill="#14284b"/>
+  <text x="34" y="209" fill="#fff" font-weight="700">Security filter chain</text>
+  <text x="34" y="223" fill="#dfe7f5" font-size="10">JwtAuthenticationFilter → SecurityContext → authorizeHttpRequests → @PreAuthorize (roles)</text>
+  <!-- layers -->
+  <rect x="22" y="240" width="560" height="44" rx="4" fill="#fff" stroke="#2d5aa0"/>
+  <text x="34" y="258" font-weight="700" fill="#14284b">Controllers</text>
+  <text x="34" y="274" fill="#333" font-size="10">AuthController, EmployeeController, EmployeeTransferController, LookupController · @Valid request DTOs</text>
+  <rect x="22" y="294" width="560" height="44" rx="4" fill="#fff" stroke="#2d5aa0"/>
+  <text x="34" y="312" font-weight="700" fill="#14284b">Services (@Transactional business logic)</text>
+  <text x="34" y="328" fill="#333" font-size="10">EmployeeService, EmployeeTransferService, EmployeeCodeGenerator, AuthService, LookupService · EmployeeMapper</text>
+  <rect x="22" y="348" width="560" height="44" rx="4" fill="#fff" stroke="#2d5aa0"/>
+  <text x="34" y="366" font-weight="700" fill="#14284b">Repositories (Spring Data JPA / Hibernate)</text>
+  <text x="34" y="382" fill="#333" font-size="10">EmployeeRepository + EmployeeSpecifications (search), sequence / history / user repositories</text>
+  <line x1="302" y1="230" x2="302" y2="240" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="302" y1="284" x2="302" y2="294" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="302" y1="338" x2="302" y2="348" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="312" y="425" fill="#5a6577" font-size="10">Entities ↔ DTOs · no Aadhaar/PAN in list responses</text>
+  <!-- side boxes -->
+  <rect x="596" y="192" width="142" height="62" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="606" y="210" font-weight="700" fill="#14284b">JwtService</text>
+  <text x="606" y="226" fill="#333" font-size="10">issue / verify HS256</text><text x="606" y="240" fill="#333" font-size="10">token (60 min)</text>
+  <rect x="596" y="262" width="142" height="62" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="606" y="280" font-weight="700" fill="#14284b">GlobalException-</text><text x="606" y="294" font-weight="700" fill="#14284b">Handler</text>
+  <text x="606" y="310" fill="#333" font-size="10">→ ErrorResponse JSON</text>
+  <rect x="596" y="332" width="142" height="82" rx="4" fill="#fff" stroke="#9fb3d1"/>
+  <text x="606" y="350" font-weight="700" fill="#14284b">Crypto</text>
+  <text x="606" y="366" fill="#333" font-size="10">AES-256-GCM converter</text><text x="606" y="380" fill="#333" font-size="10">HMAC-SHA256 hasher</text><text x="606" y="394" fill="#333" font-size="10">BCrypt passwords</text>
+
+  <!-- DB -->
+  <line x1="302" y1="392" x2="302" y2="456" stroke="#2d5aa0" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="312" y="446" fill="#14284b" font-size="10">JDBC (MySQL Connector/J) · parameterised SQL</text>
+  <rect x="10" y="458" width="740" height="56" rx="6" fill="#14284b"/>
+  <text x="22" y="478" fill="#fff" font-weight="700" font-size="12">MySQL database EMPLOYEEMNG (InnoDB)</text>
+  <text x="22" y="497" fill="#dfe7f5" font-size="10">employees · employee_personal_details (encrypted Aadhaar/PAN) · departments · roles · employee_code_sequences · employee_transfer_history · users</text>
+</svg>
+<p style="font-size:8.8pt;color:#5a6577;margin-top:0"><b style="color:#14284b">Figure 4.1</b> – Application architecture and request flow.</p>
+
+<h2>4.1 Request flow</h2>
+<p><b>React page → Axios API layer → Spring Boot Controller → Service → Repository → MySQL</b>, and the response travels back the
+same way as JSON. For example, saving the registration form calls <code>createEmployee()</code> in
+<code>src/api/employees.js</code>, which sends <code>POST /api/employees</code>; <code>EmployeeController.create</code> validates
+the body and calls <code>EmployeeService.create</code>, which uses the repositories inside one database transaction.</p>
+
+<h2>4.2 Responsibilities</h2>
+<div class="two-col">
+<div>
+<h3>Frontend</h3>
+<ul>
+  <li>Screens, forms and tables; client-side validation with the same rules as the backend.</li>
+  <li>Keeps the login session (token, expiry, user) and logs out on expiry or any 401 response.</li>
+  <li>Hides actions the user’s role cannot perform.</li>
+  <li>Keeps search, filters, sorting and page in the URL so they survive a page refresh.</li>
+</ul>
+</div>
+<div>
+<h3>Backend</h3>
+<ul>
+  <li>Authentication and authorization on every request.</li>
+  <li>Final validation, duplicate checks and business rules.</li>
+  <li>Employee Code generation and transfers inside transactions.</li>
+  <li>Encryption, masking, and one consistent error format.</li>
+</ul>
+</div>
+</div>
+
+<h2>4.3 Authentication flow</h2>
+<ol>
+  <li>The user submits username and password; the frontend calls <code>POST /api/auth/login</code>.</li>
+  <li><code>AuthService</code> loads the user, compares the password with the stored BCrypt hash and checks that the account is
+    enabled and that a linked employee is not INACTIVE.</li>
+  <li><code>JwtService</code> issues an HS256-signed token containing the username, user id, login role and linked employee id,
+    valid for 60 minutes.</li>
+  <li>The frontend stores the session and Axios sends <code>Authorization: Bearer &lt;token&gt;</code> with every request.</li>
+  <li><code>JwtAuthenticationFilter</code> verifies the signature and expiry and places the user and role
+    (<code>ROLE_ADMIN</code>, <code>ROLE_MANAGER</code> or <code>ROLE_EMPLOYEE</code>) into the security context.
+    <code>@PreAuthorize</code> then allows or rejects the call.</li>
+</ol>
+
+<h2>4.4 Error-handling flow</h2>
+<p>Any exception thrown by a controller or service is converted by <code>GlobalExceptionHandler</code> into an
+<code>ErrorResponse</code> JSON body with the correct HTTP status (Section 12). Authentication and permission failures raised by the
+security filter chain use the same format. The frontend shows <code>fieldErrors</code> next to the matching form fields and the
+<code>message</code> in a notification.</p>
+
+<!-- =============================== 5 DATABASE =============================== -->
+<h1 id="s5"><span class="num">5</span> Database Design and ER Diagram</h1>
+<p>The schema is defined in <code>database/01_schema.sql</code> (MySQL 8+, InnoDB) and reference data in
+<code>database/02_seed_data.sql</code>. The database contains seven tables. The JPA entities in
+<code>com.ems.entity</code> map the same tables, column names and constraint names.</p>
+
+<svg class="diagram" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="9.5">
+  <style>
+    .hd { fill: #14284b; } .ht { fill: #fff; font-weight: 700; font-size: 10.5px; }
+    .bx { fill: #fff; stroke: #14284b; } .pk { font-weight: 700; fill: #14284b; } .fk { fill: #2d5aa0; font-style: italic; }
+    .cl { fill: #333; } .rel { stroke: #2d5aa0; stroke-width: 1.4; fill: none; } .card { fill: #b3261e; font-weight: 700; font-size: 10px; }
+  </style>
+  <!-- departments -->
+  <rect class="bx" x="30" y="20" width="190" height="71"/><rect class="hd" x="30" y="20" width="190" height="20"/>
+  <text class="ht" x="38" y="34">departments</text>
+  <text class="pk" x="38" y="54">PK id BIGINT</text><text class="cl" x="38" y="68">name VARCHAR(50) UQ</text><text class="cl" x="38" y="82">code_prefix VARCHAR(1) UQ</text>
+  <!-- code sequences -->
+  <rect class="bx" x="30" y="114" width="190" height="56"/><rect class="hd" x="30" y="114" width="190" height="20"/>
+  <text class="ht" x="38" y="128">employee_code_sequences</text>
+  <text class="pk" x="38" y="148">PK/FK department_id BIGINT</text><text class="cl" x="38" y="162">next_value INT</text>
+  <!-- roles -->
+  <rect class="bx" x="30" y="200" width="190" height="56"/><rect class="hd" x="30" y="200" width="190" height="20"/>
+  <text class="ht" x="38" y="214">roles</text>
+  <text class="pk" x="38" y="234">PK id BIGINT</text><text class="cl" x="38" y="248">name VARCHAR(80) UQ</text>
+  <!-- employees -->
+  <rect class="bx" x="300" y="20" width="210" height="251"/><rect class="hd" x="300" y="20" width="210" height="20"/>
+  <text class="ht" x="308" y="34">employees</text>
+  <text class="pk" x="308" y="54">PK id BIGINT</text>
+  <text class="cl" x="308" y="68">employee_code VARCHAR(10) UQ</text>
+  <text class="cl" x="308" y="82">full_name VARCHAR(100)</text>
+  <text class="cl" x="308" y="96">email VARCHAR(150) UQ</text>
+  <text class="cl" x="308" y="110">mobile VARCHAR(10)</text>
+  <text class="cl" x="308" y="124">gender VARCHAR(10)</text>
+  <text class="cl" x="308" y="138">address VARCHAR(500)</text>
+  <text class="fk" x="308" y="152">FK department_id BIGINT</text>
+  <text class="fk" x="308" y="166">FK role_id BIGINT</text>
+  <text class="cl" x="308" y="180">joining_date DATE</text>
+  <text class="cl" x="308" y="194">annual_salary DECIMAL(12,2) CHECK &gt; 0</text>
+  <text class="cl" x="308" y="208">status VARCHAR(20)</text>
+  <text class="cl" x="308" y="222">version BIGINT</text>
+  <text class="cl" x="308" y="236">created_at DATETIME(6)</text>
+  <text class="cl" x="308" y="250">updated_at DATETIME(6)</text>
+  <!-- personal details -->
+  <rect class="bx" x="590" y="20" width="200" height="116"/><rect class="hd" x="590" y="20" width="200" height="20"/>
+  <text class="ht" x="598" y="34">employee_personal_details</text>
+  <text class="pk" x="598" y="54">PK/FK employee_id BIGINT</text>
+  <text class="cl" x="598" y="68">aadhaar_encrypted VARCHAR(255)</text>
+  <text class="cl" x="598" y="82">aadhaar_hash VARCHAR(64) UQ</text>
+  <text class="cl" x="598" y="96">pan_encrypted VARCHAR(255)</text>
+  <text class="cl" x="598" y="110">pan_hash VARCHAR(64) UQ</text>
+  <text class="cl" x="598" y="124">date_of_birth DATE</text>
+  <!-- users -->
+  <rect class="bx" x="590" y="170" width="200" height="116"/><rect class="hd" x="590" y="170" width="200" height="20"/>
+  <text class="ht" x="598" y="184">users</text>
+  <text class="pk" x="598" y="204">PK id BIGINT</text>
+  <text class="cl" x="598" y="218">username VARCHAR(50) UQ</text>
+  <text class="cl" x="598" y="232">password_hash VARCHAR(100)</text>
+  <text class="cl" x="598" y="246">user_role VARCHAR(20)</text>
+  <text class="fk" x="598" y="260">FK employee_id BIGINT NULL UQ</text>
+  <text class="cl" x="598" y="274">enabled BOOLEAN · created_at</text>
+  <!-- transfer history -->
+  <rect class="bx" x="300" y="320" width="210" height="166"/><rect class="hd" x="300" y="320" width="210" height="20"/>
+  <text class="ht" x="308" y="334">employee_transfer_history</text>
+  <text class="pk" x="308" y="354">PK id BIGINT</text>
+  <text class="fk" x="308" y="368">FK employee_id BIGINT</text>
+  <text class="fk" x="308" y="382">FK old_department_id BIGINT</text>
+  <text class="fk" x="308" y="396">FK new_department_id BIGINT</text>
+  <text class="cl" x="308" y="410">old_employee_code VARCHAR(10)</text>
+  <text class="cl" x="308" y="424">new_employee_code VARCHAR(10)</text>
+  <text class="cl" x="308" y="438">transfer_date DATE</text>
+  <text class="cl" x="308" y="452">reason VARCHAR(500)</text>
+  <text class="fk" x="308" y="466">FK transferred_by_user_id NULL</text>
+  <text class="cl" x="308" y="480">created_at DATETIME(6)</text>
+
+  <!-- relations -->
+  <path class="rel" d="M220,60 L300,60"/><text class="card" x="224" y="56">1</text><text class="card" x="288" y="56">N</text>
+  <path class="rel" d="M125,91 L125,114"/><text class="card" x="130" y="104">1 : 1</text>
+  <path class="rel" d="M220,228 L300,228"/><text class="card" x="224" y="224">1</text><text class="card" x="288" y="224">N</text>
+  <path class="rel" d="M590,60 L510,60"/><text class="card" x="514" y="56">1</text><text class="card" x="568" y="56">1 : 1</text>
+  <path class="rel" d="M590,240 L510,240"/><text class="card" x="514" y="236">1</text><text class="card" x="560" y="236">0..1</text>
+  <path class="rel" d="M405,271 L405,320"/><text class="card" x="410" y="286">1</text><text class="card" x="410" y="316">N</text>
+  <path class="rel" d="M30,45 L14,45 L14,400 L300,400"/><text class="card" x="18" y="58">1</text><text class="card" x="284" y="396">N</text>
+  <text x="20" y="418" fill="#2d5aa0" font-size="9">old_department_id and new_department_id → departments.id</text>
+  <path class="rel" d="M690,286 L690,460 L510,460"/><text class="card" x="696" y="300">1</text><text class="card" x="516" y="456">N</text>
+  <text x="560" y="478" fill="#2d5aa0" font-size="9">transferred_by_user_id → users.id</text>
+</svg>
+<p style="font-size:8.8pt;color:#5a6577;margin-top:0"><b style="color:#14284b">Figure 5.1</b> – Entity-relationship diagram of the
+EMPLOYEEMNG database (PK = primary key, FK = foreign key, UQ = unique constraint).</p>
+
+<h2>5.1 Tables</h2>
+<table>
+  <thead><tr><th style="width:26%">Table</th><th>Purpose</th><th style="width:24%">Entity</th></tr></thead>
+  <tbody>
+  <tr><td><code>employees</code></td><td>General and employment information; the only table used by global search.</td><td><code>Employee</code></td></tr>
+  <tr><td><code>employee_personal_details</code></td><td>Aadhaar and PAN (encrypted + keyed hash) and date of birth; 1:1 with employees, sharing its primary key.</td><td><code>EmployeePersonalDetails</code></td></tr>
+  <tr><td><code>departments</code></td><td>IT, HR, Finance, Sales, Admin with their one-letter code prefix.</td><td><code>Department</code></td></tr>
+  <tr><td><code>roles</code></td><td>The 3 roles: Admin, Manager, Employee.</td><td><code>Role</code></td></tr>
+  <tr><td><code>employee_code_sequences</code></td><td>One counter row per department (<code>next_value</code>).</td><td><code>EmployeeCodeSequence</code></td></tr>
+  <tr><td><code>employee_transfer_history</code></td><td>One row per transfer; insert-only.</td><td><code>EmployeeTransferHistory</code></td></tr>
+  <tr><td><code>users</code></td><td>Application logins with BCrypt password hash and login role; EMPLOYEE logins link to their employee.</td><td><code>User</code></td></tr>
+  </tbody>
+</table>
+
+<h2>5.2 Keys, relationships and constraints</h2>
+<table>
+  <thead><tr><th style="width:36%">Relationship / constraint</th><th>Details</th></tr></thead>
+  <tbody>
+  <tr><td>departments 1 – N employees</td><td><code>fk_employees_department</code>: employees.department_id → departments.id</td></tr>
+  <tr><td>roles 1 – N employees</td><td><code>fk_employees_role</code>: employees.role_id → roles.id</td></tr>
+  <tr><td>employees 1 – 1 employee_personal_details</td><td><code>fk_personal_employee</code>; employee_id is both primary and foreign key</td></tr>
+  <tr><td>departments 1 – 1 employee_code_sequences</td><td><code>fk_code_seq_department</code>; department_id is both primary and foreign key</td></tr>
+  <tr><td>employees 1 – N employee_transfer_history</td><td><code>fk_transfer_employee</code>; plus <code>fk_transfer_old_department</code> and <code>fk_transfer_new_department</code> → departments</td></tr>
+  <tr><td>users N – 1 employees (optional)</td><td><code>fk_users_employee</code>, nullable and unique (<code>uk_users_employee</code>): an employee has at most one login</td></tr>
+  <tr><td>users 1 – N transfer history</td><td><code>fk_transfer_user</code>: who performed the transfer (NULL for sample data)</td></tr>
+  <tr><td>Unique constraints</td><td><code>uk_employees_code</code>, <code>uk_employees_email</code>, <code>uk_personal_aadhaar_hash</code>, <code>uk_personal_pan_hash</code>,
+    <code>uk_departments_name</code>, <code>uk_departments_code_prefix</code>, <code>uk_roles_name</code>, <code>uk_users_username</code></td></tr>
+  <tr><td>Check constraint</td><td><code>chk_employees_salary</code>: annual_salary &gt; 0</td></tr>
+  <tr><td>Indexes</td><td>employees: department_id, role_id, status, joining_date, annual_salary, full_name (plus the unique indexes on
+    employee_code and email); transfer history: employee_id.</td></tr>
+  </tbody>
+</table>
+<p>The utf8mb4_0900_ai_ci collation is case-insensitive, so the unique email constraint and LIKE searches ignore letter case.
+The application also stores emails in lower case.</p>
+
+<h2>5.3 Department-wise Employee Code generation</h2>
+<p><code>02_seed_data.sql</code> inserts one row per department into <code>employee_code_sequences</code> with
+<code>next_value = 1</code>. To allocate a code, <code>EmployeeCodeGenerator.nextCodeFor</code> reads that row with
+<code>SELECT … FOR UPDATE</code> (a pessimistic write lock), builds <i>prefix + 4-digit value</i> (e.g. <code>H0006</code>) and
+increments the counter. The lock is held until the surrounding transaction commits, so concurrent requests for the same
+department wait for each other and can never receive the same code. If the transaction fails, the counter increment is rolled
+back as well.</p>
+
+<h2>5.4 Sensitive data storage</h2>
+<p>Aadhaar and PAN are not stored in plain text. The columns <code>aadhaar_encrypted</code> and <code>pan_encrypted</code> hold
+AES-256-GCM ciphertext written by a JPA converter, and <code>aadhaar_hash</code> / <code>pan_hash</code> hold a keyed HMAC-SHA256
+value whose UNIQUE index prevents duplicates without storing the number itself. Because these columns are in a separate table,
+the search query (which reads only <code>employees</code>) cannot match them.</p>
+
+<h2>5.5 Transfer history and transactional consistency</h2>
+<p>Each transfer stores the old and new department, the old and new Employee Code, the transfer date, the reason and the user who
+performed it. The employee update and the history insert happen in one transaction, so the database never contains a
+changed code without its history row, or the other way round. The SQL scripts insert only reference data; the 20 sample
+employees and 4 sample transfers are inserted by the backend on first start (Assumption 15).</p>
+
+<!-- =============================== 6 SCREENSHOTS =============================== -->
+<h1 id="s6"><span class="num">6</span> Frontend Screenshots</h1>
+<p>All screenshots below were captured on 31 October 2026 from the application running locally with its sample data
+(5 departments, 3 roles, 20 employees; Chrome, 1366 px wide). The application has no separate dashboard page: after login, Admin and Manager land on the
+Employee List and an Employee lands on their own profile.</p>
+
+<figure>
+  <img src="screenshots/01_login.png" alt="Login page">
+  <figcaption><b>Figure 6.1 – Login page.</b> Username/password sign-in that returns a JWT. The demo accounts are listed in
+  Section 14.5 (local evaluation only); they are not shown on the page.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/02_list_admin.png" alt="Employee list as Admin">
+  <figcaption><b>Figure 6.2 – Employee List (Admin landing page).</b> Columns Employee Code, Name, Department, Role, Email,
+  Mobile, Salary, Status and Actions (View, Edit, Transfer, Deactivate), the global search box, all filters, the total number of
+  matching records and pagination.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/03_search_filters.png" alt="Search and filters">
+  <figcaption><b>Figure 6.3 – Search and filters working together.</b> Global search “a” combined with Department = IT and
+  Annual salary = ₹3–5 LPA, sorted by Salary descending (▼). The server returns the 1 matching record; “Clear filters (3)”
+  resets everything.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/04_pagination.png" alt="Pagination">
+  <figcaption><b>Figure 6.4 – Pagination.</b> Page size 5 (options 5, 10, 20), page 2, sorted by Name ascending; the summary
+  shows the record range and the total number of matching records.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/05_add_form.png" alt="Add employee form">
+  <figcaption><b>Figure 6.5 – Employee Registration form.</b> Employment and personal details. The Employee Code is
+  read-only (“Auto-generated”) and each department option shows its code prefix.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/06_add_validation.png" alt="Validation errors">
+  <figcaption><b>Figure 6.6 – Field validation.</b> Invalid input is rejected before anything is sent to the server: name
+  with digits, invalid email, mobile not 10 digits, Aadhaar not 12 digits (auto-formatted as XXXX-XXXX-XXXX while typing),
+  PAN not in ABCDE1234F format, salary not greater than zero.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/09_details_manager.png" alt="Employee details as Manager">
+  <figcaption><b>Figure 6.7 – View Employee (Manager).</b> Complete employment and personal details. Aadhaar and PAN are
+  masked for the Manager role (XXXX-XXXX-8785, XXXXXX015K). The transfer history shows this employee’s two transfers: code
+  S0003 → I0006 (Sales → IT) and I0006 → S0006 (IT → Sales). The internal record is the same throughout.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/10_edit_manager.png" alt="Edit employee as Manager">
+  <figcaption><b>Figure 6.8 – Edit Employee (Manager).</b> Employee Code and Department are read-only (changed only by
+  transfer). Aadhaar/PAN may be left blank to keep the stored values, shown masked. Status options that would deactivate or
+  reactivate the employee are disabled for Managers.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/07_transfer_form.png" alt="Department transfer form">
+  <figcaption><b>Figure 6.9 – Employee Department Transfer.</b> Employee Name, Current Employee Code and Current Department
+  (read-only), New Department (the current one is not offered), Transfer Date and Transfer Reason (Rahul Sharma, I0001). The form was filled for the
+  screenshot but not submitted.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/08_list_manager.png" alt="Employee list as Manager">
+  <figcaption><b>Figure 6.10 – Role-based UI: Manager.</b> The same list as Figure 6.2 without the Deactivate action,
+  which is reserved for Admin.</figcaption>
+</figure>
+
+<figure>
+  <img src="screenshots/11_employee_profile.png" alt="Employee self-service view">
+  <figcaption><b>Figure 6.11 – Role-based UI: Employee.</b> An EMPLOYEE login sees only “My Profile” and no management
+  actions. (The screenshot is cropped above the personal-details card, which shows the employee’s own unmasked Aadhaar/PAN.)</figcaption>
+</figure>
+
+<!-- =============================== 7 API =============================== -->
+<h1 id="s7"><span class="num">7</span> Backend REST API Documentation</h1>
+<p>Base URL: <code>http://localhost:9998/api</code>. All endpoints except login and the API documentation require the header
+<code>Authorization: Bearer &lt;token&gt;</code>. The specification is available in Swagger UI
+(<code>http://localhost:9998/swagger-ui.html</code>), in <code>docs/openapi.json</code> and in the Postman collection
+<code>docs/EmployeeManagement.postman_collection.json</code>.</p>
+
+<table>
+  <thead><tr><th style="width:9%">Method</th><th style="width:33%">Endpoint</th><th>Description</th><th style="width:22%">Access role</th></tr></thead>
+  <tbody>
+  <tr><td colspan="4" style="background:#e8edf5;font-weight:700;color:#14284b">Authentication</td></tr>
+  <tr><td>POST</td><td><code>/api/auth/login</code></td><td>Log in; returns JWT, expiry and user info</td><td>Public</td></tr>
+  <tr><td>GET</td><td><code>/api/auth/me</code></td><td>Current user from the token</td><td>Any logged-in user</td></tr>
+  <tr><td colspan="4" style="background:#e8edf5;font-weight:700;color:#14284b">Employees</td></tr>
+  <tr><td>GET</td><td><code>/api/employees</code></td><td>Search, filter, sort and paginate (Section 9)</td><td>ADMIN, MANAGER</td></tr>
+  <tr><td>POST</td><td><code>/api/employees</code></td><td>Create employee; code generated; <b>201</b> + Location header</td><td>ADMIN, MANAGER</td></tr>
+  <tr><td>GET</td><td><code>/api/employees/{id}</code></td><td>Employment details of one employee</td><td>ADMIN, MANAGER, own EMPLOYEE</td></tr>
+  <tr><td>GET</td><td><code>/api/employees/{id}/personal-details</code></td><td>Aadhaar, PAN (full or masked) and date of birth</td><td>ADMIN, MANAGER (masked), own EMPLOYEE</td></tr>
+  <tr><td>PUT</td><td><code>/api/employees/{id}</code></td><td>Update employee (not department); status into or out of INACTIVE is ADMIN-only</td><td>ADMIN, MANAGER</td></tr>
+  <tr><td>PATCH</td><td><code>/api/employees/{id}/deactivate</code></td><td>Soft delete: status → INACTIVE</td><td>ADMIN</td></tr>
+  <tr><td colspan="4" style="background:#e8edf5;font-weight:700;color:#14284b">Department transfers</td></tr>
+  <tr><td>POST</td><td><code>/api/employees/{id}/transfer</code></td><td>Transfer to another department; new code; history row</td><td>ADMIN, MANAGER</td></tr>
+  <tr><td>GET</td><td><code>/api/employees/{id}/transfers</code></td><td>Transfer history, newest first</td><td>ADMIN, MANAGER, own EMPLOYEE</td></tr>
+  <tr><td colspan="4" style="background:#e8edf5;font-weight:700;color:#14284b">Lookups</td></tr>
+  <tr><td>GET</td><td><code>/api/departments</code></td><td>Departments with code prefix</td><td>Any logged-in user</td></tr>
+  <tr><td>GET</td><td><code>/api/roles</code></td><td>Roles: Admin, Manager, Employee</td><td>Any logged-in user</td></tr>
+  </tbody>
+</table>
+
+<h2>7.1 Request and response examples</h2>
+<p>Examples use the fictitious sample data; tokens are shortened and identity numbers are dummy values.</p>
+<h3>Login</h3>
+<pre><code>POST /api/auth/login
+{ "username": "admin", "password": "••••••••" }
+
+200 OK
+{ "token": "eyJhbGciOiJIUzI1NiJ9.…", "tokenType": "Bearer", "expiresAt": "2026-10-31T12:00:00Z",
+  "user": { "userId": 1, "username": "admin", "role": "ADMIN", "employeeId": null } }</code></pre>
+
+<h3>Create employee</h3>
+<pre><code>POST /api/employees
+{ "fullName": "Asha Verma", "email": "asha.verma@example.com", "mobile": "9876500000",
+  "aadhaarNumber": "1234-5678-9012", "panNumber": "ABCDE1234F", "dateOfBirth": "1998-05-14",
+  "gender": "FEMALE", "address": "12 MG Road, Pune", "departmentId": 3, "roleId": 3,
+  "joiningDate": "2025-07-01", "annualSalary": 420000, "status": "ACTIVE" }
+
+201 Created   Location: http://localhost:9998/api/employees/21
+{ "id": 21, "employeeCode": "F0005", "fullName": "Asha Verma", "email": "asha.verma@example.com",
+  "mobile": "9876500000", "gender": "FEMALE", "address": "12 MG Road, Pune", "departmentId": 3,
+  "departmentName": "Finance", "roleId": 3, "roleName": "Employee", "joiningDate": "2025-07-01",
+  "annualSalary": 420000, "status": "ACTIVE", "version": 0, "createdAt": "…", "updatedAt": "…" }</code></pre>
+<p>The id and code are illustrative: the code is the next free Finance number at the time of the request.</p>
+<p>The response never contains Aadhaar or PAN. They are returned only by the personal-details endpoint:</p>
+<pre><code>GET /api/employees/15/personal-details        (as MANAGER)
+{ "employeeId": 15, "employeeCode": "S0006", "fullName": "Imran Khan",
+  "aadhaarNumber": "XXXX-XXXX-8785", "panNumber": "XXXXXX015K", "dateOfBirth": "2000-12-22", "masked": true }</code></pre>
+
+<h3>Department transfer</h3>
+<pre><code>POST /api/employees/1/transfer
+{ "newDepartmentId": 2, "transferDate": "2026-10-31", "reason": "Moving to HR operations team" }
+
+200 OK
+{ "employee": { "id": 1, "employeeCode": "H0006", "departmentName": "HR", … },
+  "transfer": { "id": 5, "employeeId": 1, "employeeName": "Rahul Sharma",
+                "oldDepartmentName": "IT", "newDepartmentName": "HR",
+                "oldEmployeeCode": "I0001", "newEmployeeCode": "H0006",
+                "transferDate": "2026-10-31", "reason": "Moving to HR operations team",
+                "transferredBy": "admin", "createdAt": "…" } }</code></pre>
+<p>Rahul Sharma (id 1) keeps id 1; his code changes from <code>I0001</code> to the next free HR code (<code>H0006</code> with the
+current sample data, whose highest HR code is H0005).</p>
+
+<h3>Error response (all endpoints)</h3>
+<pre><code>400 Bad Request
+{ "timestamp": "…", "status": 400, "error": "Bad Request", "message": "Validation failed",
+  "path": "/api/employees", "fieldErrors": { "panNumber": "PAN must be in the format ABCDE1234F" } }</code></pre>
+
+<figure>
+  <img src="screenshots/12_swagger.png" alt="Swagger UI">
+  <figcaption><b>Figure 7.1 – Swagger UI</b> generated by springdoc-openapi from the controllers, with the “Authorize” button for
+  the JWT.</figcaption>
+</figure>
+
+<!-- =============================== 8 WORKFLOWS =============================== -->
+<h1 id="s8"><span class="num">8</span> Employee CRUD Workflow</h1>
+<h2>8.1 Employee creation</h2>
+<ol>
+  <li>An Admin or Manager opens <b>Add Employee</b> (<code>/employees/new</code>, <code>EmployeeFormPage</code>).</li>
+  <li>The user enters employment and personal details. Mobile, Aadhaar and PAN are formatted while typing.</li>
+  <li><code>validateEmployee()</code> checks every field; errors are shown next to the fields and nothing is sent.</li>
+  <li>The form sends <code>POST /api/employees</code> with the JWT. <code>@PreAuthorize</code> allows only ADMIN and MANAGER.</li>
+  <li>Bean Validation checks the request (<code>@Validated({Default, OnCreate})</code>: Aadhaar and PAN required on create).
+    <code>EmployeeService.create</code> then checks the 18+ age rule and the joining date, and that the department and role exist.</li>
+  <li>Email is normalised to lower case, Aadhaar to 12 digits and PAN to upper case. Duplicate email, Aadhaar (by hash) or PAN
+    (by hash) returns <b>409 Conflict</b>.</li>
+  <li><code>EmployeeCodeGenerator</code> locks the department’s sequence row and allocates the next code.</li>
+  <li>The employee row and the personal-details row (Aadhaar/PAN encrypted by the converter) are saved in the same transaction.</li>
+  <li>The API returns <b>201 Created</b> with the new employee. The UI opens the details page and shows
+    “… added with employee code F0005”.</li>
+</ol>
+
+<h2>8.2 Employee update</h2>
+<ul>
+  <li><code>PUT /api/employees/{id}</code> (ADMIN, MANAGER). The form sends the <code>version</code> it loaded; if someone else saved
+    the employee in the meantime, the API returns <b>409</b> instead of overwriting (optimistic locking with <code>@Version</code>).</li>
+  <li>The department cannot be changed here (<b>400</b>, “Use the department transfer instead”); the field is read-only in the form.</li>
+  <li>Aadhaar and PAN are optional: left blank, the stored values are kept; if supplied, they are validated and checked for duplicates.</li>
+  <li>Email uniqueness is checked against all other employees. Date of birth is updated in the personal details.</li>
+  <li><b>Authorization:</b> a non-Admin request that would move the status into or out of INACTIVE is rejected with <b>403</b>.
+    Managers may still switch between Active and On Leave.</li>
+</ul>
+
+<h2>8.3 Employee deactivation</h2>
+<ul>
+  <li><code>PATCH /api/employees/{id}/deactivate</code> is <b>ADMIN only</b>; a Manager receives <b>403</b>.</li>
+  <li>It is a soft delete: the status becomes INACTIVE and the record, personal details and transfer history are kept.
+    Repeating it is harmless.</li>
+  <li>The Deactivate button appears only for Admins and asks for confirmation. Afterwards the employee cannot be transferred, and a
+    linked EMPLOYEE login can no longer sign in. Only an Admin can reactivate (by setting the status back through Edit).</li>
+</ul>
+
+<!-- =============================== 9 SEARCH =============================== -->
+<h1 id="s9"><span class="num">9</span> Search, Filters, Sorting and Pagination</h1>
+<p>Everything is executed on the server by <code>GET /api/employees</code>. All parameters are optional and every supplied
+parameter narrows the result (they are combined with AND).</p>
+<table>
+  <thead><tr><th style="width:24%">Parameter</th><th>Behaviour</th></tr></thead>
+  <tbody>
+  <tr><td><code>search</code></td><td>Case-insensitive “contains” match on Employee Code, Name, Email, Mobile, Address, Department name and Role name,
+    plus Status by word start. Aadhaar and PAN are never searched.</td></tr>
+  <tr><td><code>departmentId</code>, <code>roleId</code></td><td>Exact match</td></tr>
+  <tr><td><code>status</code></td><td><code>ACTIVE</code>, <code>INACTIVE</code>, <code>ON_LEAVE</code></td></tr>
+  <tr><td><code>gender</code></td><td><code>MALE</code>, <code>FEMALE</code>, <code>OTHER</code></td></tr>
+  <tr><td><code>joinedFrom</code>, <code>joinedTo</code></td><td>Joining date range, <code>yyyy-MM-dd</code>, both ends inclusive</td></tr>
+  <tr><td><code>minSalary</code>, <code>maxSalary</code></td><td>Annual salary; minimum inclusive, maximum exclusive</td></tr>
+  <tr><td><code>sortBy</code>, <code>sortDir</code></td><td><code>id, employeeCode, fullName, email, mobile, departmentName, roleName, joiningDate, annualSalary, status</code>;
+    <code>asc</code> or <code>desc</code></td></tr>
+  <tr><td><code>pageNumber</code>, <code>pageSize</code></td><td>1-based page number; 1–100 records per page (the UI offers 5, 10 and 20)</td></tr>
+  </tbody>
+</table>
+
+<h2>9.1 Salary ranges in the UI</h2>
+<table>
+  <thead><tr><th>Option</th><th>₹1–3 LPA</th><th>₹3–5 LPA</th><th>₹5–10 LPA</th><th>₹10+ LPA</th><th>Custom range</th></tr></thead>
+  <tbody>
+  <tr><td><b>minSalary</b></td><td>100000</td><td>300000</td><td>500000</td><td>1000000</td><td>entered minimum</td></tr>
+  <tr><td><b>maxSalary</b></td><td>300000</td><td>500000</td><td>1000000</td><td>– (none)</td><td>entered maximum (“below”)</td></tr>
+  </tbody>
+</table>
+
+<h2>9.2 How the filters work together</h2>
+<p><code>EmployeeSpecifications.matching</code> builds the SQL WHERE clause with the JPA Criteria API: each supplied parameter adds one
+condition and all conditions are joined with AND, so any combination of search, filters, sorting and paging runs as
+<b>one SELECT</b> for the page plus <b>one COUNT</b> for the total. Values are bound as JDBC parameters, <code>%</code> and
+<code>_</code> in the search text are escaped, and only allow-listed sort fields are accepted. The employee id is added as a second
+sort key so that page boundaries are stable. An entity graph loads department and role in the same query.</p>
+<p>On the frontend (<code>EmployeeListPage</code>), the search box is debounced (400 ms), every filter or sort change returns to page 1,
+and all criteria are kept in the URL query string. If the current page no longer exists (for example after the last record on it was
+deactivated), the list moves to the last existing page. Invalid criteria (e.g. custom minimum greater than maximum) show the server’s
+field message and clear the old results.</p>
+
+<h2>9.3 Example (actual response from the running application with the sample data)</h2>
+<pre><code>GET /api/employees?search=Rahul&amp;departmentId=1&amp;minSalary=300000&amp;maxSalary=500000&amp;pageNumber=1&amp;pageSize=10
+
+200 OK
+{ "content": [ { "id": 1, "employeeCode": "I0001", "fullName": "Rahul Sharma", "departmentName": "IT",
+                 "roleName": "Employee", "annualSalary": 450000.0, "status": "ACTIVE", … } ],
+  "pageNumber": 1, "pageSize": 10, "totalElements": 1, "totalPages": 1 }</code></pre>
+
+<!-- =============================== 10 TRANSFER WORKFLOW =============================== -->
+<h1 id="s10"><span class="num">10</span> Department Transfer Workflow</h1>
+<svg class="diagram" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10.5">
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2d5aa0"/></marker></defs>
+  <!-- lanes -->
+  <text x="10" y="16" font-weight="700" fill="#14284b" font-size="11.5">Frontend – TransferPage</text>
+  <rect x="10" y="24" width="170" height="40" rx="4" fill="#eef2f8" stroke="#2d5aa0"/><text x="20" y="41" fill="#14284b" font-weight="700">1. Select employee</text><text x="20" y="56" fill="#333" font-size="9.5">Transfer action in list/details</text>
+  <rect x="10" y="74" width="170" height="40" rx="4" fill="#eef2f8" stroke="#2d5aa0"/><text x="20" y="91" fill="#14284b" font-weight="700">2. Current data shown</text><text x="20" y="106" fill="#333" font-size="9.5">name, code, department</text>
+  <rect x="10" y="124" width="170" height="40" rx="4" fill="#eef2f8" stroke="#2d5aa0"/><text x="20" y="141" fill="#14284b" font-weight="700">3. Choose new department</text><text x="20" y="156" fill="#333" font-size="9.5">current one not offered</text>
+  <rect x="10" y="174" width="170" height="40" rx="4" fill="#eef2f8" stroke="#2d5aa0"/><text x="20" y="191" fill="#14284b" font-weight="700">4. Date and reason</text><text x="20" y="206" fill="#333" font-size="9.5">validateTransfer() in browser</text>
+  <line x1="95" y1="64" x2="95" y2="74" stroke="#2d5aa0" marker-end="url(#a2)"/><line x1="95" y1="114" x2="95" y2="124" stroke="#2d5aa0" marker-end="url(#a2)"/><line x1="95" y1="164" x2="95" y2="174" stroke="#2d5aa0" marker-end="url(#a2)"/>
+  <path d="M180,194 L214,194 L214,44 L236,44" fill="none" stroke="#2d5aa0" stroke-width="1.6" marker-end="url(#a2)"/>
+  <text x="54" y="232" fill="#2d5aa0" font-size="9.5">POST /api/employees/{id}/transfer</text>
+
+  <!-- transaction box -->
+  <rect x="238" y="8" width="512" height="300" rx="6" fill="#f6f8fb" stroke="#14284b" stroke-dasharray="5,3"/>
+  <text x="250" y="26" font-weight="700" fill="#14284b" font-size="11.5">Backend – EmployeeTransferService.transfer  (one @Transactional unit)</text>
+  <rect x="250" y="36" width="235" height="44" rx="4" fill="#fff" stroke="#2d5aa0"/><text x="260" y="53" fill="#14284b" font-weight="700">5a. Lock employee row</text><text x="260" y="69" fill="#333" font-size="9.5">SELECT … FOR UPDATE (findByIdForUpdate)</text>
+  <rect x="250" y="90" width="235" height="78" rx="4" fill="#fff" stroke="#2d5aa0"/><text x="260" y="107" fill="#14284b" font-weight="700">5b. Validate</text>
+  <text x="260" y="122" fill="#333" font-size="9.5">not INACTIVE (409) · not same department (400)</text><text x="260" y="136" fill="#333" font-size="9.5">department exists · date not in future,</text><text x="260" y="150" fill="#333" font-size="9.5">not before joining / previous transfer (400)</text>
+  <rect x="250" y="178" width="235" height="44" rx="4" fill="#fff" stroke="#2d5aa0"/><text x="260" y="195" fill="#14284b" font-weight="700">6. New code for new department</text><text x="260" y="211" fill="#333" font-size="9.5">lock sequence row, e.g. I0001 → H0006</text>
+  <rect x="250" y="232" width="235" height="64" rx="4" fill="#fff" stroke="#2d5aa0"/><text x="260" y="249" fill="#14284b" font-weight="700">8. Update employee</text><text x="260" y="265" fill="#333" font-size="9.5">department_id + employee_code changed;</text><text x="260" y="279" fill="#333" font-size="9.5">internal id unchanged</text>
+  <line x1="367" y1="80" x2="367" y2="90" stroke="#2d5aa0" marker-end="url(#a2)"/><line x1="367" y1="168" x2="367" y2="178" stroke="#2d5aa0" marker-end="url(#a2)"/><line x1="367" y1="222" x2="367" y2="232" stroke="#2d5aa0" marker-end="url(#a2)"/>
+  <rect x="505" y="232" width="232" height="64" rx="4" fill="#fff" stroke="#2d5aa0"/><text x="515" y="249" fill="#14284b" font-weight="700">9. Insert transfer history</text><text x="515" y="265" fill="#333" font-size="9.5">old/new department and code, date,</text><text x="515" y="279" fill="#333" font-size="9.5">reason, transferred-by user</text>
+  <line x1="485" y1="264" x2="505" y2="264" stroke="#2d5aa0" marker-end="url(#a2)"/>
+  <rect x="505" y="36" width="232" height="186" rx="4" fill="#14284b"/>
+  <text x="517" y="56" fill="#fff" font-weight="700">7. Database transaction</text>
+  <text x="517" y="76" fill="#dfe7f5" font-size="9.5">All steps 5a–9 commit together.</text>
+  <text x="517" y="94" fill="#dfe7f5" font-size="9.5">If any step fails, everything rolls back:</text>
+  <text x="517" y="110" fill="#dfe7f5" font-size="9.5">department, code, sequence counter</text>
+  <text x="517" y="126" fill="#dfe7f5" font-size="9.5">and history stay unchanged.</text>
+  <text x="517" y="150" fill="#dfe7f5" font-size="9.5">Row locks make concurrent transfers</text>
+  <text x="517" y="166" fill="#dfe7f5" font-size="9.5">of the same employee, or into the same</text>
+  <text x="517" y="182" fill="#dfe7f5" font-size="9.5">department, run one after another.</text>
+  <text x="517" y="206" fill="#9fb3d1" font-size="9.5">Tested: failedTransferRollsBackEverything</text>
+  <!-- result -->
+  <path d="M621,308 L621,330 L40,330 L40,214" fill="none" stroke="#2d5aa0" stroke-width="1.6" marker-end="url(#a2)"/>
+  <text x="200" y="350" fill="#14284b" font-size="10">200 OK → UI shows “Employee code changed I0001 → H0006” and opens the details page</text>
+</svg>
+<p style="font-size:8.8pt;color:#5a6577;margin-top:0"><b style="color:#14284b">Figure 10.1</b> – Department transfer workflow.</p>
+<p>Because the list, the details page and the personal-details response all read the code from
+<code>employees.employee_code</code>, the new Employee Code appears everywhere immediately after the transfer.</p>
+
+<!-- =============================== 11 SECURITY =============================== -->
+<h1 id="s11"><span class="num">11</span> Authentication and Security</h1>
+<table>
+  <thead><tr><th style="width:24%">Mechanism</th><th>Implementation</th></tr></thead>
+  <tbody>
+  <tr><td>JWT authentication</td><td>HS256-signed tokens (JJWT 0.12.6) with claims <code>sub</code> (username), <code>uid</code>, <code>role</code> and
+    <code>eid</code> (linked employee); validity 60 minutes (<code>app.security.jwt-expiration-minutes</code>). The signing key comes from
+    <code>JWT_SECRET</code> and must be at least 32 bytes, otherwise the application refuses to start.</td></tr>
+  <tr><td>Token validation</td><td><code>JwtAuthenticationFilter</code> reads the Bearer header and verifies signature and expiry on every request.
+    An invalid, tampered or expired token leaves the request unauthenticated, giving <b>401</b>.</td></tr>
+  <tr><td>Spring Security configuration</td><td><code>SecurityConfig</code>: stateless sessions, HTTP Basic and form login disabled; public endpoints are only
+    <code>POST /api/auth/login</code>, Swagger UI / OpenAPI docs and <code>/error</code>; all others require authentication. CSRF protection is
+    disabled because no cookies or sessions are used (the token travels in a header). 401 and 403 are returned as JSON.</td></tr>
+  <tr><td>Role-based authorization</td><td><code>@EnableMethodSecurity</code> with <code>@PreAuthorize</code> on each endpoint (Section 7). Record-level rule:
+    <code>@employeeAccess.isSelf(authentication, #id)</code> lets an EMPLOYEE read only the record whose id is in their token.</td></tr>
+  <tr><td>Password hashing</td><td>BCrypt (<code>BCryptPasswordEncoder</code>); plain passwords are never stored. Login returns the same message and takes
+    comparable time for an unknown user, wrong password, disabled account or inactive employee, so valid usernames cannot be discovered.</td></tr>
+  <tr><td>Aadhaar / PAN encryption</td><td>AES-256-GCM (<code>AesGcmEncryptor</code>) with a random 12-byte IV per value and a 128-bit authentication tag,
+    stored as Base64(IV ‖ ciphertext). Applied automatically by the JPA <code>EncryptedStringConverter</code>. Key: <code>ENCRYPTION_KEY</code> (32 bytes).</td></tr>
+  <tr><td>HMAC uniqueness check</td><td><code>SensitiveDataHasher</code> stores HMAC-SHA256 with a secret key (<code>HASH_KEY</code>) in a UNIQUE column, so duplicates are
+    rejected without storing the number, and the 12-digit Aadhaar space cannot be brute-forced without the key.</td></tr>
+  <tr><td>Masking</td><td>Full Aadhaar (formatted XXXX-XXXX-XXXX) and PAN only for ADMIN or the employee themself; otherwise
+    <code>XXXX-XXXX-9012</code> / <code>XXXXXX234F</code> with <code>"masked": true</code>. List and employee responses never include them.</td></tr>
+  <tr><td>Search protection</td><td>The search query reads only the <code>employees</code> table; <code>employee_personal_details</code> is never joined (verified by an automated test).</td></tr>
+  <tr><td>SQL injection</td><td>Criteria API / Spring Data with bound parameters; no SQL strings built from user input; sort fields allow-listed.</td></tr>
+  <tr><td>CORS</td><td>Only origins from <code>app.cors.allowed-origins</code> (default <code>http://localhost:5173</code>, override with
+    <code>CORS_ALLOWED_ORIGINS</code>); methods GET, POST, PUT, PATCH, DELETE, OPTIONS; headers Authorization and Content-Type; applies to <code>/api/**</code>.</td></tr>
+  <tr><td>Secrets management</td><td>Database password and the three keys are read from environment variables or the git-ignored
+    <code>application-local.properties</code>; none are in the repository or this document.</td></tr>
+  <tr><td>Error messages</td><td>Database error texts are never returned to the client, as they can contain data values.</td></tr>
+  </tbody>
+</table>
+<div class="warn"><b>Known limitations (by design for this assignment).</b> The JWT is stored in the browser’s localStorage, which any script on the page
+could read; the risk is limited by the 60-minute expiry and because the app renders no untrusted HTML. A token already issued stays valid until it expires,
+even if the user is deactivated in the meantime. The demo accounts and Swagger UI are intended for local evaluation.</div>
+
+<!-- =============================== 12 VALIDATION =============================== -->
+<h1 id="s12"><span class="num">12</span> Validation and Error Handling</h1>
+<p>The same rules are applied in the browser (<code>src/utils/validation.js</code>) for immediate feedback and on the server
+(<code>EmployeeRequest</code> annotations and <code>EmployeeService</code>) as the authoritative check.</p>
+<table>
+  <thead><tr><th style="width:17%">Field</th><th>Rule (frontend and backend)</th><th style="width:33%">Error message</th></tr></thead>
+  <tbody>
+  <tr><td>Full name</td><td>Required; alphabets and spaces only (<code>^[A-Za-z ]+$</code>); max 100</td><td>Full name may contain only alphabets and spaces</td></tr>
+  <tr><td>Email</td><td>Required; valid format; max 150; unique (case-insensitive)</td><td>Enter a valid email address / An employee with this email already exists</td></tr>
+  <tr><td>Mobile</td><td>Required; exactly 10 digits (<code>^\d{10}$</code>)</td><td>Mobile number must be exactly 10 digits</td></tr>
+  <tr><td>Aadhaar</td><td>Required on create; exactly 12 digits; accepted with or without dashes and auto-formatted as XXXX-XXXX-XXXX; unique</td><td>Aadhaar must be exactly 12 digits</td></tr>
+  <tr><td>PAN</td><td>Required on create; format ABCDE1234F (auto upper-case); unique</td><td>PAN must be in the format ABCDE1234F</td></tr>
+  <tr><td>Date of birth</td><td>Required; not in the future; employee at least 18 years old</td><td>Date of birth cannot be a future date / Employee must be at least 18 years old</td></tr>
+  <tr><td>Joining date</td><td>Required; on or after the 18th birthday</td><td>Joining date must be on or after the employee’s 18th birthday</td></tr>
+  <tr><td>Annual salary</td><td>Required; greater than zero; at most 2 decimals (10 integer digits)</td><td>Annual salary must be greater than zero</td></tr>
+  <tr><td>Gender, address, department, role, status</td><td>Required; address max 500; department and role must exist</td><td>… is required / Department does not exist</td></tr>
+  <tr><td>Transfer</td><td>New department required and different; date not in the future and not before joining; reason required, max 500</td><td>Employee is already in the … department</td></tr>
+  </tbody>
+</table>
+
+<h2>12.1 HTTP status codes</h2>
+<table>
+  <thead><tr><th style="width:12%">Status</th><th>When it is returned</th></tr></thead>
+  <tbody>
+  <tr><td>200 / 201</td><td>Success; 201 Created with a Location header for a new employee</td></tr>
+  <tr><td>400</td><td>Validation error, invalid parameter or enum value, malformed JSON, department change via edit, same-department transfer, invalid transfer date</td></tr>
+  <tr><td>401</td><td>Missing, invalid or expired token; wrong login</td></tr>
+  <tr><td>403</td><td>Role not allowed; an employee accessing another employee’s record; a non-Admin deactivating or reactivating</td></tr>
+  <tr><td>404</td><td>Employee or endpoint not found</td></tr>
+  <tr><td>405 / 415</td><td>Wrong HTTP method / body not sent as JSON</td></tr>
+  <tr><td>409</td><td>Duplicate email, Aadhaar or PAN; stale update (edited by someone else); transferring an inactive employee</td></tr>
+  <tr><td>500</td><td>Unexpected error; a generic message is returned and the details are logged</td></tr>
+  </tbody>
+</table>
+
+<h2>12.2 Global exception handling</h2>
+<p><code>GlobalExceptionHandler</code> (<code>@RestControllerAdvice</code>) maps each exception type to a status and the common
+<code>ErrorResponse</code> body: Bean Validation errors (one message per field), <code>BusinessValidationException</code> (400),
+<code>ResourceNotFoundException</code> (404), <code>ConflictException</code> and optimistic-locking failures (409),
+<code>InvalidCredentialsException</code> (401) and <code>AccessDeniedException</code> (403). If two requests insert the same email at the
+same moment, the database unique constraint fires; the handler recognises the constraint name and still returns 409 with the
+correct field.</p>
+
+<!-- =============================== 13 TESTING =============================== -->
+<h1 id="s13"><span class="num">13</span> Actual Testing Results</h1>
+<p>The backend has 45 automated tests (JUnit 5 + Spring Boot Test + MockMvc). The integration tests run the complete application
+against a real MySQL test database (<code>EMPLOYEEMNG_TEST</code>, created automatically and reset before each test), so they also
+exercise SQL constraints, locks and transactions.</p>
+<table class="kv" style="width:60%">
+  <thead><tr><th>Testing metric</th><th>Actual result</th></tr></thead>
+  <tbody>
+  <tr><td>Total tests</td><td>45</td></tr>
+  <tr><td>Passed</td><td>45</td></tr>
+  <tr><td>Failed</td><td>0</td></tr>
+  <tr><td>Errors</td><td>0</td></tr>
+  <tr><td>Skipped</td><td>0</td></tr>
+  <tr><td>Build result</td><td>BUILD SUCCESS</td></tr>
+  <tr><td>Database</td><td><code>EMPLOYEEMNG_TEST</code> (MySQL 9.0.1), separate from the development database</td></tr>
+  <tr><td>Last run</td><td>31 October 2026, <code>mvnw.cmd test</code> (Surefire reports in <code>backend/target/surefire-reports</code>)</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead><tr><th style="width:27%">Test class</th><th class="c" style="width:7%">Tests</th><th>What is verified</th></tr></thead>
+  <tbody>
+  <tr><td><code>EmployeeApiIntegrationTest</code><br><span class="tag tag-info">CRUD · validation · concurrency</span></td><td class="c">12</td>
+    <td>Department code generation and encrypted Aadhaar storage; masking for Manager; duplicate email (ignoring case) and duplicate Aadhaar
+    (differently formatted); 400 with one message per invalid field; minimum age; update without department change; stale version → 409;
+    soft-delete deactivate; 404; paging totals; 8 concurrent creates receive unique codes.</td></tr>
+  <tr><td><code>EmployeeSearchIntegrationTest</code><br><span class="tag tag-info">search · filters · sort · paging</span></td><td class="c">10</td>
+    <td>Partial, case-insensitive search; search across code, email, mobile, address, department and role; status by word start;
+    Aadhaar/PAN never matched; <code>%</code>/<code>_</code> treated literally; salary range boundaries; each filter; search + filters +
+    sorting + pagination together; sorting by joined fields both directions; invalid parameters → 400.</td></tr>
+  <tr><td><code>EmployeeTransferIntegrationTest</code><br><span class="tag tag-info">transfer · transactions</span></td><td class="c">9</td>
+    <td>New code with unchanged id; codes never reused and history ordered; same department rejected; inactive employee rejected; invalid dates
+    and missing reason; <b>failed transfer rolls back everything</b>; concurrent transfers into one department get unique codes; only Admin/Manager
+    may transfer; unknown employee → 404.</td></tr>
+  <tr><td><code>SecurityIntegrationTest</code><br><span class="tag tag-info">security</span></td><td class="c">8</td>
+    <td>401 without or with a tampered token; login success and failure; employee sees only own record; Manager masking and no deactivation
+    (neither PATCH nor a status change via PUT); Admin full access; inactive employee cannot log in; Swagger docs public.</td></tr>
+  <tr><td><code>AesGcmEncryptorTest</code><br><span class="tag tag-info">unit</span></td><td class="c">4</td>
+    <td>Encrypt/decrypt round trip; different ciphertext each time; tampering detected; wrong key length rejected.</td></tr>
+  <tr><td><code>SensitiveDataHasherTest</code><br><span class="tag tag-info">unit</span></td><td class="c">2</td>
+    <td>Same input gives the same hash; different input gives a different hash.</td></tr>
+  </tbody>
+</table>
+
+<h2>13.1 Automated and manual checks</h2>
+<table>
+  <thead><tr><th style="width:34%">Check</th><th style="width:16%">Type</th><th>Result</th></tr></thead>
+  <tbody>
+  <tr><td>Backend tests (45)</td><td>Automated</td><td>All passed (above)</td></tr>
+  <tr><td>Frontend lint (<code>oxlint</code>)</td><td>Automated</td><td>0 errors, 1 warning (unused constant <code>DEMO_USERS</code> in <code>LoginPage.jsx</code>; no effect on behaviour)</td></tr>
+  <tr><td>Frontend production build (<code>npm run build</code>)</td><td>Automated</td><td>Build succeeded (106 modules)</td></tr>
+  <tr><td>Screens in Section 6</td><td>Manual</td><td>Captured from the running application on 31 October 2026: login for all three roles, list, combined
+    filters, pagination, form validation, details, edit and transfer forms, masking, Swagger UI. Every screen that shows employee data was
+    captured with the final sample data (5 departments, 3 roles, 20 employees).</td></tr>
+  <tr><td>Sample data on a fresh database</td><td>Manual</td><td>5 departments, 3 roles, 20 employees (20 personal-detail rows), 4 transfers, 3 logins;
+    no orphaned or duplicate rows; running <code>02_seed_data.sql</code> twice adds nothing</td></tr>
+  <tr><td>Live API calls (login, combined search, masked personal details, Manager deactivation)</td><td>Manual</td><td>Responses in
+    Sections 7.1 and 9.3 match the running application; a Manager’s deactivation request returns 403</td></tr>
+  </tbody>
+</table>
+<div class="note"><b>Not covered.</b> The frontend has no automated unit or browser tests. During screenshot capture the create, edit,
+transfer and deactivate forms were not submitted, to keep the sample data unchanged; those operations are verified by the backend
+integration tests. No load testing or production deployment was performed.</div>
+
+<!-- =============================== 14 SETUP =============================== -->
+<h1 id="s14"><span class="num">14</span> Installation and Setup Instructions</h1>
+<h2>14.1 Prerequisites</h2>
+<table>
+  <thead><tr><th style="width:25%">Software</th><th style="width:25%">Required</th><th>Verified with</th></tr></thead>
+  <tbody>
+  <tr><td>Java (JDK)</td><td>17 or newer</td><td>17.0.10</td></tr>
+  <tr><td>Maven</td><td>Not required – Maven Wrapper included</td><td>Wrapper downloads Maven 3.9.11</td></tr>
+  <tr><td>Node.js</td><td>20 or newer</td><td>24.11.0</td></tr>
+  <tr><td>npm</td><td>Bundled with Node.js</td><td>10.9.1</td></tr>
+  <tr><td>MySQL Server</td><td>8 or newer, on <code>localhost:3306</code></td><td>9.0.1</td></tr>
+  </tbody>
+</table>
+
+<h2>14.2 Database setup</h2>
+<pre><code>mysql -u root -p &lt; database/01_schema.sql                 # creates database EMPLOYEEMNG and all 7 tables
+mysql -u root -p EMPLOYEEMNG &lt; database/02_seed_data.sql   # 5 departments, 3 roles, code sequences</code></pre>
+<p>Both scripts can safely be run again. The connection URL defaults to <code>jdbc:mysql://localhost:3306/EMPLOYEEMNG</code>
+(override with <code>DB_URL</code>).</p>
+
+<h2>14.3 Backend setup</h2>
+<ol>
+  <li>Copy <code>backend/src/main/resources/application-local.properties.example</code> to
+    <code>application-local.properties</code> in the same folder (this file is git-ignored) and fill in:
+<pre><code>DB_USERNAME=root
+DB_PASSWORD=&lt;your MySQL password&gt;
+ENCRYPTION_KEY=&lt;Base64, 32 bytes&gt;
+HASH_KEY=&lt;Base64, 32 bytes&gt;
+JWT_SECRET=&lt;Base64, 32 bytes or more&gt;</code></pre>
+    Generate each key separately: <code>node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"</code>.
+    The same names can be set as environment variables instead (plus optional <code>DB_URL</code> and <code>CORS_ALLOWED_ORIGINS</code>).</li>
+  <li>Start the backend (dependencies are downloaded automatically on the first run):
+<pre><code>cd backend
+mvnw.cmd spring-boot:run        # Windows
+./mvnw spring-boot:run          # macOS / Linux</code></pre></li>
+  <li>API: <code>http://localhost:9998/api</code> · Swagger UI: <code>http://localhost:9998/swagger-ui.html</code></li>
+  <li>On the first start the backend inserts the sample data (log line “Inserted 20 sample employees”).</li>
+  <li>Optional – run the tests: <code>mvnw.cmd test</code> (uses the same credentials and creates <code>EMPLOYEEMNG_TEST</code>).</li>
+</ol>
+
+<h2>14.4 Frontend setup</h2>
+<pre><code>cd frontend
+npm ci          # installs the exact versions from package-lock.json
+npm run dev     # development server</code></pre>
+<p>Open <code>http://localhost:5173</code>. The Vite development server forwards <code>/api</code> to <code>http://localhost:9998</code>, so no
+API URL needs to be configured; <code>VITE_API_BASE_URL</code> can override it for other setups. Production build:
+<code>npm run build</code> (output in <code>frontend/dist</code>).</p>
+
+<h2>14.5 Demo accounts (sample data)</h2>
+<table>
+  <thead><tr><th>Username</th><th>Password</th><th>Login role</th><th>Linked employee</th></tr></thead>
+  <tbody>
+  <tr><td><code>admin</code></td><td><code>Admin@123</code></td><td>ADMIN</td><td>–</td></tr>
+  <tr><td><code>manager</code></td><td><code>Manager@123</code></td><td>MANAGER</td><td>–</td></tr>
+  <tr><td><code>rahul</code></td><td><code>Employee@123</code></td><td>EMPLOYEE</td><td>Rahul Sharma (I0001)</td></tr>
+  </tbody>
+</table>
+<p style="font-size:8.8pt;color:#5a6577">These are the publicly documented demo credentials created by the sample-data loader for local evaluation;
+they are not production credentials.</p>
+
+<!-- =============================== 15 GITHUB =============================== -->
+<h1 id="s15"><span class="num">15</span> GitHub Repository</h1>
+<table class="kv">
+  <tr><td>Repository URL</td><td><a href="https://github.com/dharmikk7610/IAIP_Intern_Assignment">https://github.com/dharmikk7610/IAIP_Intern_Assignment</a></td></tr>
+  <tr><td>Branch</td><td><code>main</code></td></tr>
+  <tr><td>Contents</td><td>Complete frontend and backend source code, database scripts, automated tests, API documentation (OpenAPI and Postman)
+    and README with setup instructions</td></tr>
+  <tr><td>Not included (by design)</td><td><code>node_modules</code>, build output (<code>dist</code>, <code>target</code>) and
+    <code>application-local.properties</code> with local passwords and keys (all git-ignored)</td></tr>
+</table>
+
+<h2>15.1 Main folders</h2>
+<pre><code>IAIP_Intern_Assignment/
+├── backend/                     Spring Boot REST API (pom.xml, Maven Wrapper)
+│   └── src/main/java/com/ems/
+│       ├── controller/          REST endpoints + @PreAuthorize rules
+│       ├── service/             Business logic, transactions, code generation, transfers
+│       ├── repository/          Spring Data JPA repositories + search Specifications
+│       ├── entity/              JPA entities and enums
+│       ├── dto/                 Request / response records
+│       ├── mapper/              Entity → DTO, Aadhaar / PAN masking
+│       ├── security/            JWT, access rules, AES-GCM / HMAC crypto
+│       ├── exception/           Global exception handler, error response
+│       ├── config/              Spring Security, CORS, OpenAPI
+│       ├── validation/          Validation groups
+│       └── seed/                Sample data loader
+│   └── src/test/java/com/ems/   45 automated tests
+├── frontend/                    React + Vite application (package.json, package-lock.json)
+│   └── src/  api/  auth/  components/  hooks/  pages/  utils/
+├── database/                    01_schema.sql, 02_seed_data.sql
+├── docs/                        openapi.json, Postman collection
+├── scripts/                     create-submission-zip.ps1
+└── README.md                    Setup, API reference, design decisions, assumptions, testing</code></pre>
+<p>The <b>README.md</b> in the repository root is the reference for setup and contains the same API, validation and permission tables in
+condensed form.</p>
+
+<!-- =============================== 16 CONCLUSION =============================== -->
+<h1 id="s16"><span class="num">16</span> Conclusion</h1>
+<p>The Employee Management System implements the assignment as a React single-page application, a Spring Boot REST API and a
+MySQL database. Employees can be registered, viewed, edited and deactivated; each receives a department-wise Employee Code that is
+generated under a database lock and changes only through a transactional department transfer, which is recorded in the transfer
+history. Search, six filters, sorting and pagination run on the server in one query. JWT authentication with the Admin, Manager and
+Employee roles controls every endpoint, and Aadhaar and PAN are encrypted at rest, masked for Managers and excluded from search.</p>
+<p>The sample data contains 5 departments, 3 roles (Admin, Manager, Employee) and 20 employees. All 45 automated backend tests pass
+against a dedicated MySQL test database, and the screenshots in Section 6 were captured from the running application.</p>
+<p>Known limitations are stated where they apply: the JWT is kept in the browser’s localStorage and stays valid until it expires,
+the frontend has no automated tests, and no load testing or production deployment was performed.</p>
+
+</body>
+</html>
